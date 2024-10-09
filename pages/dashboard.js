@@ -1,6 +1,6 @@
 import { RealtimeDataContext } from "@/components/layout";
 import { useContext } from "react";
-import styles from "@/styles/Dashboard.module.css"; // Import custom CSS module
+import styles from "../styles/Dashboard.module.css"; // Import custom CSS module
 import Image from "next/image";
 import ExpandableItem from "@/components/Item/ExpandableItem";
 import SimpleItem from "@/components/Item/SimpleItem";

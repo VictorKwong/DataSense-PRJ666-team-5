@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi"; // Feather icons for hamburger and close buttons
-import styles from "@/styles/sidebar.module.css"; // Import your CSS file for styling
+import styles from "../styles/sidebar.module.css"; // Import your CSS file for styling
 import Link from "next/link";
 
 const Sidebar = () => {
