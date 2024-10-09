@@ -1,0 +1,40 @@
+/* sidebar.module.css */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #333;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(-100%); /* Hidden by default */
+}
+
+.sidebarOpen {
+  transform: translateX(0); /* Slide into view */
+}
+
+.sidebarClose {
+  transform: translateX(-100%); /* Slide out of view */
+}
+
+.hamburger {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  font-size: 24px;
+  cursor: pointer;
+  color: gray;
+}
+
+/* Optional styles for responsiveness */
+@media (min-width: 768px) {
+  .sidebar {
+    transform: translateX(0); /* Always show on larger screens */
+  }
+
+  .hamburger {
+    display: none !important;
+  }
+}
