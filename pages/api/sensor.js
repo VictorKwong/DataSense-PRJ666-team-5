@@ -17,9 +17,11 @@ export async function getSensorHistoryData() {
     const data = await response.json();
     return data;
   } catch (error) {
-    // Handle errors gracefully and throw a meaningful message
-    throw new Error(
-      error.message || "An error occurred while fetching sensor data"
-    );
+    // Instead of throwing an error, return an empty array or a meaningful message
+    console.error("Error fetching sensor data:", error.message);
+    return {
+      error: true,
+      message: "No sensor connected", // Custom message to indicate that the backend is down
+    };
   }
 }

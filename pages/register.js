@@ -62,21 +62,19 @@ const Register = () => {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        margin: "0 auto",
-        padding: "20px",
-        textAlign: "center",
-      }}
-    >
-      <h1 className="pt-3 pb-3">Join today.</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form
-        onSubmit={handleRegisterWithEmailPassword}
-        style={{ display: "flex", gap: "15px", flexDirection: "column" }}
-      >
-        <div>
+    <div className="register-container">
+      <div className="register-card">
+        <h1 className="register-title">Join DataSense Today</h1>
+        <p className="register-description">
+          Manage your devices and get insights seamlessly.
+        </p>
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <form
+          onSubmit={handleRegisterWithEmailPassword}
+          style={{ display: "flex", gap: "15px", flexDirection: "column" }}
+        >
           <input
             className="form-control text-center mt-2 mb-1"
             type="email"
@@ -85,8 +83,7 @@ const Register = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div>
+
           <input
             className="form-control text-center mt-2 mb-1"
             type="password"
@@ -95,8 +92,7 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        <div>
+
           <input
             className="form-control text-center mt-2 mb-1"
             type="password"
@@ -105,45 +101,134 @@ const Register = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-        </div>
-        <div>
+
           <label>
             <input className="mt-2 mb-2" type="checkbox" required /> I agree to
-            the terms and conditions
+            the{" "}
+            <a href="/terms" className="terms-link">
+              terms and conditions
+            </a>
           </label>
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-around" }}>
-          <Button type="submit" variant="text" className="pull-right p-1">
-            Register
-          </Button>
-          <Button
-            type="button"
-            variant="text"
-            className="pull-right p-1"
-            onClick={handleCancel}
-            style={{ marginLeft: "10px" }}
-          >
-            Cancel
-          </Button>
-        </div>
-      </form>
-      <hr />
 
-      <Button
-        onClick={handleGoogleSignIn}
-        variant="text"
-        className="pull-right p-1"
-        type="submit"
-      >
-        <Image
-          src="/assets/images/search.png"
-          alt="Google-logo"
-          width={20}
-          height={20}
-        />
+          <div className="register-button-container">
+            <Button type="submit" className="register-button">
+              Register
+            </Button>
+            <Button
+              type="button"
+              className="cancel-button"
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+        <hr />
+        <Button
+          onClick={handleGoogleSignIn}
+          className="google-register-button"
+          type="button"
+        >
+          <Image
+            src="/assets/images/search.png"
+            alt="Google-logo"
+            width={20}
+            height={20}
+          />
+          <span className="m-2">Register with Google</span>
+        </Button>
+      </div>
 
-        <span className="m-2">Register with Google</span>
-      </Button>
+      <style jsx>{`
+        .register-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          background-image: url('/assets/images/background_image.webp'); /* Background image */
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          position: relative;
+        }
+        .register-card {
+          background-color: rgba(255, 255, 255, 0.9); /* Slight transparency to blend with the background */
+          padding: 60px;
+          max-width: 450px;
+          width: 100%;
+          border-radius: 12px;
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+          text-align: center;
+          z-index: 2;
+        }
+        .register-title {
+          font-size: 2rem;
+          font-weight: bold;
+          color: #333;
+        }
+        .register-description {
+          font-size: 1rem;
+          margin-bottom: 20px;
+          color: #555;
+        }
+        .form-control {
+          padding: 14px;
+          border-radius: 8px;
+          border: 1px solid #ddd;
+          font-size: 1rem;
+        }
+        .register-button-container {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 20px;
+        }
+        .register-button,
+        .cancel-button {
+          padding: 12px 25px;
+          border-radius: 8px;
+          font-size: 1rem;
+          cursor: pointer;
+          border: none;
+          transition: background 0.3s ease;
+        }
+        .register-button {
+          background-color: #007bff;
+          color: #fff;
+        }
+        .register-button:hover {
+          background-color: #0056b3;
+        }
+        .cancel-button {
+          background-color: #6c757d;
+          color: #fff;
+        }
+        .cancel-button:hover {
+          background-color: #5a6268;
+        }
+        .google-register-button {
+          background-color: #db4437;
+          color: #fff;
+          padding: 12px 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 8px;
+          border: none;
+          transition: background 0.3s ease;
+          margin-top: 30px;
+          width: 100%;
+        }
+        .google-register-button:hover {
+          background-color: #c53727;
+        }
+        .terms-link {
+          color: #007bff;
+          text-decoration: none;
+        }
+        .terms-link:hover {
+          text-decoration: underline;
+        }
+      `}</style>
     </div>
   );
 };

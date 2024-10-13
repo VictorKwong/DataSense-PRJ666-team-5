@@ -2,12 +2,11 @@ import Link from "next/link";
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // Import Font Awesome CSS
-import Script from "next/script";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: sessionData, status: sessionStatus } = useSession();
+  const { data: sessionData, status: sessionStatus } = useSession(); // Get session status
 
   return (
     <nav
@@ -48,43 +47,6 @@ const Navbar = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-
-        {/* User Info and Auth Buttons */}
-        <div className="ms-auto order-lg-2 d-flex align-items-center">
-          {sessionData ? (
-            <>
-              <span className="nav-link">
-                <i className="fas fa-user me-2"></i>
-                {sessionData.user.name}
-              </span>
-              <button
-                className="btn btn-danger ms-2"
-                onClick={() => signOut("google")}
-                style={{ transition: "all 0.3s" }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.transform = "scale(1.1)")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.transform = "scale(1)")
-                }
-              >
-                <i className="fas fa-sign-out-alt me-1"></i> Logout
-              </button>
-            </>
-          ) : (
-            <button
-              className="btn btn-success"
-              onClick={() => signIn("google")}
-              style={{ transition: "all 0.3s" }}
-              onMouseOver={(e) =>
-                (e.currentTarget.style.transform = "scale(1.1)")
-              }
-              onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            >
-              <i className="fas fa-sign-in-alt me-1"></i> Login
-            </button>
-          )}
-        </div>
 
         {/* Offcanvas (pop-out sidebar) for collapsed navigation */}
         <div
@@ -138,29 +100,57 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="nav-item">
+                {/* New Interactive Data Hub Link */}
+                <Link href="/interactivedatahub" className="nav-link link-hover">
+                  <i className="fas fa-chart-pie me-1"></i>
+                  Interactive Data Hub
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link href="/settings" className="nav-link link-hover">
                   <i className="fas fa-cog me-1"></i> Settings
                 </Link>
               </li>
-              <li className="nav-item mt-auto">
-                {sessionData && (
-                  <button
-                    className="btn btn-danger w-100 mt-2"
-                    onClick={() => signOut()}
-                    style={{ transition: "all 0.3s" }}
-                    onMouseOver={(e) =>
-                      (e.currentTarget.style.transform = "scale(1.05)")
-                    }
-                    onMouseOut={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                  >
-                    <i className="fas fa-sign-out-alt me-1"></i> Logout
-                  </button>
-                )}
-              </li>
             </ul>
           </div>
+        </div>
+
+        {/* User Info and Auth Buttons */}
+        <div className="ms-auto order-lg-2 d-flex align-items-center">
+          {/* Conditional Login/Logout Button */}
+          {sessionData ? (
+            <>
+              <span className="nav-link">
+                <i className="fas fa-user me-2"></i>
+                {sessionData.user.name}
+              </span>
+              <button
+                className="btn btn-danger ms-2"
+                onClick={() => signOut()}
+                style={{ transition: "all 0.3s" }}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.1)")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
+                <i className="fas fa-sign-out-alt me-1"></i> Logout
+              </button>
+            </>
+          ) : (
+            <button
+              className="btn btn-success"
+              onClick={() => signIn("google")}
+              style={{ transition: "all 0.3s" }}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.transform = "scale(1.1)")
+              }
+              onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            >
+              <i className="fas fa-sign-in-alt me-1"></i> Login
+            </button>
+          )}
         </div>
       </div>
 

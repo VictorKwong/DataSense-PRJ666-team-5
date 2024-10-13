@@ -3,13 +3,12 @@ import { Form, Alert, Button } from "react-bootstrap";
 import { loginUser } from "@/lib/authenticate";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { favouritesAtom, searchHistoryAtom, userAtom } from "../store/store";
 import { useAtom } from "jotai";
-import Image from "next/image"; // Corrected import for Image component
+import { userAtom } from "../store/store";
+import Image from "next/image";
 
 export default function Login(props) {
-  const { data, status } = useSession(); // google login, or other oauth.
-
+  const { data, status } = useSession();
   const [user, setUser] = useAtom(userAtom);
   const [warning, setWarning] = useState("");
   const [email, setEmail] = useState("");
@@ -19,7 +18,7 @@ export default function Login(props) {
   async function handleLoginWithEmailPassword(e) {
     e.preventDefault();
     try {
-      const userData = await loginUser(email, password); // call backend, get token, store token
+      const userData = await loginUser(email, password);
       setUser(userData);
       router.push("/dashboard");
     } catch (err) {
@@ -27,36 +26,17 @@ export default function Login(props) {
     }
   }
 
-  // const handleGoogleLogIn = async () => {
-  //   try {
-  //     // await signInWithPopup(auth, provider);
-  //     const res = await signIn("google");
-  //     console.log("###", res);
-  //     // router.push("/dashboard"); // Redirect to dashboard after successful login
-  //   } catch (error) {
-  //     setWarning(error.message); // Corrected the error handling function name
-  //   }
-  // };
   useEffect(() => {
     if (status === "authenticated" && data) {
-      // google login
-      console.log({ data });
       router.push("/dashboard");
     }
   }, [data, status, router]);
 
   return (
-    <>
-      <div
-        style={{
-          maxWidth: "400px",
-          margin: "0 auto",
-          padding: "20px",
-          textAlign: "center",
-        }}
-      >
-        <h1>Welcome back!</h1>
-        <br />
+    <div className="login-container">
+      <div className="login-card">
+        <h1 className="login-title">Welcome Back!</h1>
+        <p className="login-description">Sign in to manage your devices with DataSense.</p>
         <Form onSubmit={handleLoginWithEmailPassword}>
           <Form.Group>
             <Form.Control
@@ -66,6 +46,7 @@ export default function Login(props) {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="login-input"
             />
           </Form.Group>
           <br />
@@ -77,6 +58,7 @@ export default function Login(props) {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="login-input"
             />
           </Form.Group>
 
@@ -87,14 +69,13 @@ export default function Login(props) {
             </>
           )}
           <br />
-          <div style={{ display: "flex", justifyContent: "space-around" }}>
-            <Button variant="text" className="pull-right p-1" type="submit">
+          <div className="login-button-container">
+            <Button className="login-button" type="submit">
               Login
             </Button>
             <Button
-              variant="text"
-              className="pull-right p-1"
-              type="submit"
+              className="cancel-button"
+              type="button"
               onClick={() => {
                 setEmail("");
                 setPassword("");
@@ -105,12 +86,10 @@ export default function Login(props) {
           </div>
         </Form>
         <hr />
-
         <Button
           onClick={() => signIn("google")}
-          variant="text"
-          className="pull-right p-1"
-          type="submit"
+          className="google-login-button"
+          type="button"
         >
           <Image
             src="/assets/images/search.png"
@@ -118,10 +97,124 @@ export default function Login(props) {
             width={20}
             height={20}
           />
-
           <span className="m-2">Login with Google</span>
         </Button>
+
+        {/* Create Account and Forgot Password links */}
+        <div className="additional-options">
+          <p>
+            <a href="/forgot-password" className="link">
+              Forgot Password?
+            </a>
+            <span className="divider">|</span>
+            <a href="/signup" className="link">
+              Create an Account
+            </a>
+          </p>
+        </div>
       </div>
-    </>
+
+      <style jsx>{`
+        .login-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          background-image: url('/assets/images/background_image.webp'); /* Background image */
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          position: relative;
+        }
+        .login-card {
+          background-color: rgba(255, 255, 255, 0.9); /* Slight transparency to blend with the background */
+          padding: 60px;
+          max-width: 450px;
+          width: 100%;
+          border-radius: 12px;
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+          text-align: center;
+          z-index: 2;
+        }
+        .login-title {
+          font-size: 2rem;
+          font-weight: bold;
+          color: #333;
+        }
+        .login-description {
+          font-size: 1rem;
+          margin-bottom: 20px;
+          color: #555;
+        }
+        .login-input {
+          padding: 14px;
+          border-radius: 8px;
+          border: 1px solid #ddd;
+          font-size: 1rem;
+        }
+        .login-button-container {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 20px;
+        }
+        .login-button,
+        .cancel-button {
+          padding: 12px 25px;
+          border-radius: 8px;
+          font-size: 1rem;
+          cursor: pointer;
+          border: none;
+          transition: background 0.3s ease;
+        }
+        .login-button {
+          background-color: #007bff;
+          color: #fff;
+        }
+        .login-button:hover {
+          background-color: #0056b3;
+        }
+        .cancel-button {
+          background-color: #6c757d;
+          color: #fff;
+        }
+        .cancel-button:hover {
+          background-color: #5a6268;
+        }
+        .google-login-button {
+          background-color: #db4437;
+          color: #fff;
+          padding: 12px 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 8px;
+          border: none;
+          transition: background 0.3s ease;
+          margin-top: 30px;
+          width: 100%;
+        }
+        .google-login-button:hover {
+          background-color: #c53727;
+        }
+        .additional-options {
+          margin-top: 20px;
+        }
+        .additional-options p {
+          font-size: 0.9rem;
+          color: #333;
+        }
+        .link {
+          color: #007bff;
+          text-decoration: none;
+        }
+        .link:hover {
+          text-decoration: underline;
+        }
+        .divider {
+          margin: 0 10px;
+          color: #333;
+        }
+      `}</style>
+    </div>
   );
 }

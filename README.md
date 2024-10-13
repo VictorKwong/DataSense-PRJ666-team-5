@@ -1,5 +1,15 @@
 # DataSense
 
+Update UI
+Date: 13-Oct-24
+npm install react-csv
+npm install react-datepicker
+npm install react-toastify
+npm install react-chartjs-2 chart.js
+npm install react-circular-progressbar
+
+
+
 =======
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
