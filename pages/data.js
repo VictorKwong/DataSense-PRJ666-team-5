@@ -210,14 +210,23 @@ export default function Data() {
               </tr>
             </thead>
             <tbody>
-              {filteredData?.slice(-15)?.map((row, index) => (
-                <tr key={index} className="new-data-row" style={index % 2 === 0 ? tableRowEvenStyle : tableRowOddStyle}>
-                  <td>{new Date(row.timestamp).toLocaleString()}</td>
-                  <td>{row.temperature} °C</td>
-                  <td>{row.humidity} %</td>
-                  <td>{row.moisture} %</td>
-                </tr>
-              ))}
+            {filteredData?.slice(-15)?.map((row, index) => (
+              <tr key={index} className="new-data-row" style={index % 2 === 0 ? tableRowEvenStyle : tableRowOddStyle}>
+                <td>{new Date(row.timestamp).toLocaleString('en-GB', { 
+                    timeZone: 'UTC', 
+                    hour12: true, 
+                    year: 'numeric', 
+                    month: '2-digit', 
+                    day: '2-digit', 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit' 
+                })}</td>
+                <td>{row.temperature} °C</td>
+                <td>{row.humidity} %</td>
+                <td>{row.moisture} %</td>
+              </tr>
+            ))}
             </tbody>
           </table>
         )}

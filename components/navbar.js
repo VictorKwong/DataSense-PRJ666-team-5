@@ -1,14 +1,28 @@
 import Link from "next/link";
 import { useState } from "react";
+import Image from "next/image"; // Fixed import for Image
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // Import Font Awesome CSS
-import { useSession, signIn, signOut } from "next-auth/react";
-import { isAuthenticated } from '@/lib/authenticate';
+import { userAtom } from "../store/store";
+import { useAtom } from "jotai";
+import { removeToken } from "@/lib/authenticate";
+import { useRouter } from "next/router";
+import { FiBell, FiUser } from "react-icons/fi";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: sessionData, status: sessionStatus } = useSession(); // Get session status
-  const authenticated = isAuthenticated();
+  const [user, setUser] = useAtom(userAtom);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    removeToken();
+    setUser(undefined);
+    router.push("/login");
+  };
+
+  const handleRegister = () => {
+    router.push("/register");
+  };
 
   return (
     <nav
@@ -19,41 +33,32 @@ const Navbar = () => {
         className="container-fluid d-flex align-items-center"
         style={{ height: "100%" }}
       >
-        {/* Logo with a larger size */}
+        {/* Logo */}
         <Link href="/" className="navbar-brand d-flex align-items-center">
-          <img
+          <Image
             src="/assets/images/logo.png"
             alt="DataSense Logo"
-            style={{
-              width: "100px", // Set width to 100px
-              height: "100px", // Set height to 100px
-              marginRight: "15px",
-              transition: "transform 0.3s",
-            }}
+            width={100}
+            height={100}
+            style={{ marginRight: "15px", transition: "transform 0.3s" }}
             className="logo"
           />
-          <span className="h3 mb-0"></span>{" "}
-          {/* Name aligned with the larger logo */}
         </Link>
 
         {/* Hamburger Icon for Mobile */}
         <button
-          className="navbar-toggler order-0"
+          className="navbar-toggler"
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasNavbar"
-          aria-controls="offcanvasNavbar"
           aria-expanded={isOpen ? "true" : "false"}
           aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Offcanvas (pop-out sidebar) for collapsed navigation */}
+        {/* Offcanvas for collapsed navigation */}
         <div
-          className="offcanvas offcanvas-start"
-          id="offcanvasNavbar"
+          className={`offcanvas offcanvas-start ${isOpen ? "show" : ""}`}
           aria-labelledby="offcanvasNavbarLabel"
         >
           <div className="offcanvas-header">
@@ -63,12 +68,11 @@ const Navbar = () => {
             <button
               type="button"
               className="btn-close"
-              data-bs-dismiss="offcanvas"
+              onClick={() => setIsOpen(false)}
               aria-label="Close"
             ></button>
           </div>
           <div className="offcanvas-body">
-            {/* Sidebar Menu Items */}
             <ul className="navbar-nav">
               <li className="nav-item">
                 <Link href="/" className="nav-link link-hover">
@@ -97,7 +101,7 @@ const Navbar = () => {
               </li>
               <li className="nav-item">
                 <Link href="/dashboard" className="nav-link link-hover">
-                  <i className="fa-sharp fa-solid fa-table-columns me-1"></i>
+                  <i className="fa-sharp fa-solid fa-table-columns me-1"></i>{" "}
                   Dashboard
                 </Link>
               </li>
@@ -113,60 +117,66 @@ const Navbar = () => {
                   <i className="fas fa-cog me-1"></i> Settings
                 </Link>
               </li>
-              {authenticated && (
-                <li className="nav-item">
-                  <Link href="/logout" className="nav-link link-hover">
-                    <i className="fas fa-sign-out-alt me-1"></i> Logout
-                  </Link>
-                </li>
-              )}
             </ul>
-          </div>
-        </div>
 
-        {/* User Info and Auth Buttons */}
-        <div className="ms-auto order-lg-2 d-flex align-items-center">
-          {/* Conditional Login/Logout Button */}
-          {sessionData ? (
-            <>
-              <span className="nav-link">
-                <i className="fas fa-user me-2"></i>
-                {sessionData.user.name}
-              </span>
-              <button
-                className="btn btn-danger ms-2"
-                onClick={() => signOut()}
-                style={{ transition: "all 0.3s" }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.transform = "scale(1.1)")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.transform = "scale(1)")
-                }
-              >
-                <i className="fas fa-sign-out-alt me-1"></i> Logout
-              </button>
-            </>
-          ) : (
-            <button
-              className="btn btn-success"
-              onClick={() => signIn("google")}
-              style={{ transition: "all 0.3s" }}
-              onMouseOver={(e) =>
-                (e.currentTarget.style.transform = "scale(1.1)")
-              }
-              onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            >
-              <i className="fas fa-sign-in-alt me-1"></i> Login
-            </button>
-          )}
+            {/* Search Bar */}
+            <div className="d-flex align-items-center ms-auto">
+              <div className="d-flex border rounded">
+                <input
+                  className="form-control-plaintext"
+                  style={{ padding: "0 5px" }}
+                  type="search"
+                  placeholder="Search"
+                  aria-label="Search"
+                />
+                <button className="border-0 bg-transparent shadow-none">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </div>
+              {/* User Info and Auth Buttons */}
+              <div className="ms-auto d-flex align-items-center">
+                <FiBell size={24} className="ms-3" />
+                <FiUser size={24} className="me-2" />
+                {user ? (
+                  <>
+                    <span className="nav-link">{user.email}</span>
+                    <button
+                      className="btn btn-danger ms-2"
+                      onClick={handleLogout}
+                      style={{ transition: "all 0.3s" }}
+                    >
+                      <i className="fas fa-sign-out-alt me-1"></i> Logout
+                    </button>
+                  </>
+                ) : router.pathname === "/login" ? (
+                  <button
+                    className="btn btn-success"
+                    onClick={handleRegister}
+                    style={{ transition: "all 0.3s" }}
+                  >
+                    <i className="fas fa-sign-in-alt me-1"></i> Register
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-success"
+                    onClick={() => router.push("/login")}
+                    style={{ transition: "all 0.3s" }}
+                  >
+                    <i className="fas fa-sign-in-alt me-1"></i> Login
+                  </button>
+                )}
+              </div>
+
+              {/* Notification Icon */}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Custom styles for hover and interactivity */}
       <style jsx>{`
         .navbar {
-          max-height: 120px; /* Limit navbar height */
+          max-height: 120px;
         }
         .navbar-brand {
           transition: all 0.3s;
@@ -178,7 +188,7 @@ const Navbar = () => {
           transition: color 0.3s;
         }
         .nav-link:hover {
-          color: #17a2b8; /* Custom hover color */
+          color: #17a2b8;
         }
         .link-hover:hover {
           background-color: #f8f9fa;
