@@ -1,10 +1,13 @@
 import { RealtimeDataContext } from "@/components/layout";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "../styles/Dashboard.module.css"; // Import custom CSS module
 import Image from "next/image";
 import ExpandableItem from "@/components/Item/ExpandableItem";
 import SimpleItem from "@/components/Item/SimpleItem";
 import Link from "next/link";
+import { useRouter } from 'next/router';
+import { isAuthenticated } from '@/lib/authenticate';
+import LoadingPage from "@/components/loadingPage";
 
 // Suggested Image Sources
 import DeviceSetupImage from "@/public/assets/images/device-setup.webp"; // Replace with your image
@@ -13,6 +16,26 @@ import DataImage from "@/public/assets/images/data-graph.webp"; // Replace with 
 
 export default function Dashboard() {
   const realtimeData = useContext(RealtimeDataContext);
+  const router = useRouter();
+  const [loading, setLoading] = useState(true); // Loading state
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = await isAuthenticated(); // Check authentication
+      if (!authenticated) {
+        router.push('/');
+      } else {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  // If loading, return a loading indicator (or null)
+  if (loading) {
+    return <LoadingPage />;
+  }
 
   const items = [
     {

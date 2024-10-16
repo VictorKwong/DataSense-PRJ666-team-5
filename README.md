@@ -8,7 +8,10 @@ npm install react-toastify
 npm install react-chartjs-2 chart.js
 npm install react-circular-progressbar
 
-
+Date: 15-Oct-24
+Password Regex update special character inclusion
+- Apple12345 (fail)
+- !Apple1234 (pass)
 
 =======
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).

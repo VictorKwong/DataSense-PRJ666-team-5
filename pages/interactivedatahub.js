@@ -126,256 +126,256 @@ export default function InteractiveDataHub() {
     ].filter(Boolean),
   };
 
-  return (
-    <div className="interactive-data-hub-container">
-      <h1>Interactive Data Hub</h1>
+    return (
+      <div className="interactive-data-hub-container">
+        <h1>Interactive Data Hub</h1>
 
-      {/* Toast Notifications */}
-      <ToastContainer />
+        {/* Toast Notifications */}
+        <ToastContainer />
 
-      {/* Latest Data Circular Gauges */}
-      <div className="latest-data-gauges">
-        <div className="gauge-card">
-          <CircularProgressbar
-            value={latestData.temperature}
-            text={`${latestData.temperature}°C`}
-            styles={buildStyles({
-              pathColor: `rgba(255, 99, 132, ${latestData.temperature / 100})`,
-              textColor: "#f88",
-              trailColor: "#d6d6d6",
-            })}
-          />
-          <p>Temperature</p>
-        </div>
-        <div className="gauge-card">
-          <CircularProgressbar
-            value={latestData.humidity}
-            text={`${latestData.humidity}%`}
-            styles={buildStyles({
-              pathColor: `rgba(54, 162, 235, ${latestData.humidity / 100})`,
-              textColor: "#36a2eb",
-              trailColor: "#d6d6d6",
-            })}
-          />
-          <p>Humidity</p>
-        </div>
-        <div className="gauge-card">
-          <CircularProgressbar
-            value={latestData.moisture}
-            text={`${latestData.moisture}%`}
-            styles={buildStyles({
-              pathColor: `rgba(75, 192, 192, ${latestData.moisture / 100})`,
-              textColor: "#4bc0c0",
-              trailColor: "#d6d6d6",
-            })}
-          />
-          <p>Moisture</p>
-        </div>
-      </div>
-
-      {/* Manual Update and Auto-Refresh Toggle */}
-      <div className="manual-update">
-        <button onClick={fetchLatestData} className="btn-update">
-          Refresh Data
-        </button>
-        <div className="auto-refresh-toggle">
-          <label>
-            <input
-              type="checkbox"
-              checked={isAutoRefreshOn}
-              onChange={() => setIsAutoRefreshOn(!isAutoRefreshOn)}
+        {/* Latest Data Circular Gauges */}
+        <div className="latest-data-gauges">
+          <div className="gauge-card">
+            <CircularProgressbar
+              value={latestData.temperature}
+              text={`${latestData.temperature}°C`}
+              styles={buildStyles({
+                pathColor: `rgba(255, 99, 132, ${latestData.temperature / 100})`,
+                textColor: "#f88",
+                trailColor: "#d6d6d6",
+              })}
             />
-            Auto-Refresh
+            <p>Temperature</p>
+          </div>
+          <div className="gauge-card">
+            <CircularProgressbar
+              value={latestData.humidity}
+              text={`${latestData.humidity}%`}
+              styles={buildStyles({
+                pathColor: `rgba(54, 162, 235, ${latestData.humidity / 100})`,
+                textColor: "#36a2eb",
+                trailColor: "#d6d6d6",
+              })}
+            />
+            <p>Humidity</p>
+          </div>
+          <div className="gauge-card">
+            <CircularProgressbar
+              value={latestData.moisture}
+              text={`${latestData.moisture}%`}
+              styles={buildStyles({
+                pathColor: `rgba(75, 192, 192, ${latestData.moisture / 100})`,
+                textColor: "#4bc0c0",
+                trailColor: "#d6d6d6",
+              })}
+            />
+            <p>Moisture</p>
+          </div>
+        </div>
+
+        {/* Manual Update and Auto-Refresh Toggle */}
+        <div className="manual-update">
+          <button onClick={fetchLatestData} className="btn-update">
+            Refresh Data
+          </button>
+          <div className="auto-refresh-toggle">
+            <label>
+              <input
+                type="checkbox"
+                checked={isAutoRefreshOn}
+                onChange={() => setIsAutoRefreshOn(!isAutoRefreshOn)}
+              />
+              Auto-Refresh
+            </label>
+          </div>
+        </div>
+
+        {/* Date Filter */}
+        <div className="filter-container">
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            placeholderText="Start Date"
+            className="date-picker"
+          />
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            placeholderText="End Date"
+            className="date-picker"
+          />
+          <button onClick={handleFilter} className="btn-filter">
+            Apply Filter
+          </button>
+          <button onClick={handleClearFilter} className="btn-clear">
+            Clear Filter
+          </button>
+        </div>
+
+        {/* Data Type and Graph Type Selection */}
+        <div className="selection-container">
+          <label>
+            Select Data Type:
+            <select value={selectedDataType} onChange={(e) => setSelectedDataType(e.target.value)} className="select-style">
+              <option value="temperature">Temperature</option>
+              <option value="humidity">Humidity</option>
+              <option value="moisture">Moisture</option>
+            </select>
+          </label>
+          <label>
+            Select Graph Type:
+            <select value={selectedGraphType} onChange={(e) => setSelectedGraphType(e.target.value)} className="select-style">
+              <option value="line">Line Chart</option>
+              <option value="bar">Bar Chart</option>
+              <option value="pie">Pie Chart</option>
+            </select>
+          </label>
+          <label>
+            Compare with:
+            <select value={selectedComparison} onChange={(e) => setSelectedComparison(e.target.value)} className="select-style">
+              <option value="">None</option>
+              <option value="temperature">Temperature</option>
+              <option value="humidity">Humidity</option>
+              <option value="moisture">Moisture</option>
+            </select>
           </label>
         </div>
+
+        {errorMessage ? (
+          <div className="error-message">
+            <h2>{errorMessage}</h2>
+          </div>
+        ) : (
+          <div className="chart-container">
+            {selectedGraphType === "line" && <Line data={chartData} options={{ maintainAspectRatio: false }} />}
+            {selectedGraphType === "bar" && <Bar data={chartData} options={{ maintainAspectRatio: false }} />}
+            {selectedGraphType === "pie" && <Pie data={chartData} options={{ maintainAspectRatio: false }} />}
+          </div>
+        )}
+
+        <style jsx>{`
+          .interactive-data-hub-container {
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+          }
+          h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #333;
+          }
+          .latest-data-gauges {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+          }
+          .gauge-card {
+            width: 150px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+          }
+          .manual-update {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+          }
+          .btn-update {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+          }
+          .btn-update:hover {
+            background-color: #218838;
+          }
+          .auto-refresh-toggle {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+          }
+          .auto-refresh-toggle label {
+            font-size: 1rem;
+            margin-left: 5px;
+          }
+          .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 15px;
+          }
+          .date-picker {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+          }
+          .btn-filter, .btn-clear {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+          }
+          .btn-clear {
+            background-color: #f44336;
+          }
+          .btn-filter:hover {
+            background-color: #0056b3;
+          }
+          .btn-clear:hover {
+            background-color: #c62828;
+          }
+          .selection-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 15px;
+          }
+          label {
+            font-size: 1.2rem;
+            margin-right: 10px;
+          }
+          .select-style {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            margin-left: 10px;
+            outline: none;
+            transition: border 0.3s ease;
+          }
+          .select-style:focus {
+            border: 1px solid #007bff;
+          }
+          .chart-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 40px auto;
+          }
+          .error-message {
+            text-align: center;
+            color: red;
+            font-size: 1.5rem;
+            margin-top: 20px;
+          }
+        `}</style>
       </div>
-
-      {/* Date Filter */}
-      <div className="filter-container">
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
-          selectsStart
-          startDate={startDate}
-          endDate={endDate}
-          placeholderText="Start Date"
-          className="date-picker"
-        />
-        <DatePicker
-          selected={endDate}
-          onChange={(date) => setEndDate(date)}
-          selectsEnd
-          startDate={startDate}
-          endDate={endDate}
-          placeholderText="End Date"
-          className="date-picker"
-        />
-        <button onClick={handleFilter} className="btn-filter">
-          Apply Filter
-        </button>
-        <button onClick={handleClearFilter} className="btn-clear">
-          Clear Filter
-        </button>
-      </div>
-
-      {/* Data Type and Graph Type Selection */}
-      <div className="selection-container">
-        <label>
-          Select Data Type:
-          <select value={selectedDataType} onChange={(e) => setSelectedDataType(e.target.value)} className="select-style">
-            <option value="temperature">Temperature</option>
-            <option value="humidity">Humidity</option>
-            <option value="moisture">Moisture</option>
-          </select>
-        </label>
-        <label>
-          Select Graph Type:
-          <select value={selectedGraphType} onChange={(e) => setSelectedGraphType(e.target.value)} className="select-style">
-            <option value="line">Line Chart</option>
-            <option value="bar">Bar Chart</option>
-            <option value="pie">Pie Chart</option>
-          </select>
-        </label>
-        <label>
-          Compare with:
-          <select value={selectedComparison} onChange={(e) => setSelectedComparison(e.target.value)} className="select-style">
-            <option value="">None</option>
-            <option value="temperature">Temperature</option>
-            <option value="humidity">Humidity</option>
-            <option value="moisture">Moisture</option>
-          </select>
-        </label>
-      </div>
-
-      {errorMessage ? (
-        <div className="error-message">
-          <h2>{errorMessage}</h2>
-        </div>
-      ) : (
-        <div className="chart-container">
-          {selectedGraphType === "line" && <Line data={chartData} options={{ maintainAspectRatio: false }} />}
-          {selectedGraphType === "bar" && <Bar data={chartData} options={{ maintainAspectRatio: false }} />}
-          {selectedGraphType === "pie" && <Pie data={chartData} options={{ maintainAspectRatio: false }} />}
-        </div>
-      )}
-
-      <style jsx>{`
-        .interactive-data-hub-container {
-          padding: 20px;
-          font-family: 'Poppins', sans-serif;
-          background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-          min-height: 100vh;
-        }
-        h1 {
-          text-align: center;
-          font-size: 2.5rem;
-          margin-bottom: 40px;
-          color: #333;
-        }
-        .latest-data-gauges {
-          display: flex;
-          justify-content: space-around;
-          margin-bottom: 40px;
-        }
-        .gauge-card {
-          width: 150px;
-          padding: 20px;
-          background: white;
-          border-radius: 10px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          text-align: center;
-        }
-        .manual-update {
-          display: flex;
-          justify-content: center;
-          margin-bottom: 20px;
-        }
-        .btn-update {
-          padding: 10px 20px;
-          background-color: #28a745;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-        }
-        .btn-update:hover {
-          background-color: #218838;
-        }
-        .auto-refresh-toggle {
-          margin-left: 20px;
-          display: flex;
-          align-items: center;
-        }
-        .auto-refresh-toggle label {
-          font-size: 1rem;
-          margin-left: 5px;
-        }
-        .filter-container {
-          display: flex;
-          justify-content: center;
-          margin-bottom: 20px;
-          gap: 15px;
-        }
-        .date-picker {
-          padding: 10px;
-          border-radius: 6px;
-          border: 1px solid #ccc;
-        }
-        .btn-filter, .btn-clear {
-          padding: 10px 20px;
-          background-color: #007bff;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-        }
-        .btn-clear {
-          background-color: #f44336;
-        }
-        .btn-filter:hover {
-          background-color: #0056b3;
-        }
-        .btn-clear:hover {
-          background-color: #c62828;
-        }
-        .selection-container {
-          display: flex;
-          justify-content: center;
-          margin-bottom: 20px;
-          gap: 15px;
-        }
-        label {
-          font-size: 1.2rem;
-          margin-right: 10px;
-        }
-        .select-style {
-          padding: 10px;
-          border-radius: 6px;
-          border: 1px solid #ccc;
-          font-size: 1rem;
-          margin-left: 10px;
-          outline: none;
-          transition: border 0.3s ease;
-        }
-        .select-style:focus {
-          border: 1px solid #007bff;
-        }
-        .chart-container {
-          background-color: #fff;
-          padding: 20px;
-          border-radius: 8px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          max-width: 800px;
-          margin: 40px auto;
-        }
-        .error-message {
-          text-align: center;
-          color: red;
-          font-size: 1.5rem;
-          margin-top: 20px;
-        }
-      `}</style>
-    </div>
-  );
+    );
 }

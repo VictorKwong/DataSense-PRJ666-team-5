@@ -3,10 +3,12 @@ import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // Import Font Awesome CSS
 import { useSession, signIn, signOut } from "next-auth/react";
+import { isAuthenticated } from '@/lib/authenticate';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data: sessionData, status: sessionStatus } = useSession(); // Get session status
+  const authenticated = isAuthenticated();
 
   return (
     <nav
@@ -111,6 +113,13 @@ const Navbar = () => {
                   <i className="fas fa-cog me-1"></i> Settings
                 </Link>
               </li>
+              {authenticated && (
+                <li className="nav-item">
+                  <Link href="/logout" className="nav-link link-hover">
+                    <i className="fas fa-sign-out-alt me-1"></i> Logout
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>

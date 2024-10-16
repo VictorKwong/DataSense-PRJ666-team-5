@@ -16,7 +16,9 @@ const Register = () => {
 
   // Password validation function
   const isValidPassword = (password) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    console.log("password: " + password);
+    console.log("testing: " + passwordRegex.test(password));
     return passwordRegex.test(password);
   };
 
@@ -51,6 +53,7 @@ const Register = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, provider);
+      setUser({ userData: { email }});
       router.push("/dashboard"); // Redirect to dashboard after successful login
     } catch (error) {
       setError(error.message);
