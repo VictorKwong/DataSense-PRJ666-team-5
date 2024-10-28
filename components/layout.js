@@ -26,7 +26,7 @@ const Layout = ({ children }) => {
     }
 
     if (!userFromToken) {
-      if (!["/login", "/register"].includes(window.location.pathname)) {
+      if (!["/login", "/register", "/"].includes(window.location.pathname)) {
         router.replace("/login");
       }
     }

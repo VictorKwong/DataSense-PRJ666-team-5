@@ -17,6 +17,9 @@ Date: 16-Oct-24
 Navbar update (login and logout)
 Update data.js timezone
 
+Date: 28-Oct-24
+Navbar update
+Update layout.js
 =======
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
