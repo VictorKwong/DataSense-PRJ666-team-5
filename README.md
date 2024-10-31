@@ -23,6 +23,16 @@ Update layout.js
 =======
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+Date: 29-Oct-24
+Update authenticate.js (Port 8080 -> process.env.NEXT_PUBLIC_API_URL)
+Update Vercel Env NEXT_PUBLIC_API_URL = https://datasensebackend-prj666-team-5.onrender.com
+
+Date: 31-Oct-24
+config.json: server_api, ws_api
+  "server_api": "http://localhost:8080" ->  "server_api": "https://datasensebackend-prj666-team-5.onrender.com",
+  "ws_api": "ws://localhost:8080" ->   "ws_api": "wss://datasensebackend-prj666-team-5.onrender.com"
+
+
 ## Getting Started
 
 First, run the development server:

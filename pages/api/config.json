@@ -1,4 +1,4 @@
 {
-  "server_api": "http://localhost:8080",
-  "ws_api": "ws://localhost:8080"
+  "server_api": "https://datasensebackend-prj666-team-5.onrender.com",
+  "ws_api": "wss://datasensebackend-prj666-team-5.onrender.com"
 }
