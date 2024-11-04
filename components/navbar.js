@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { useState } from "react";
-import Image from "next/image"; // Fixed import for Image
+import Image from "next/image";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "@fortawesome/fontawesome-free/css/all.min.css"; // Import Font Awesome CSS
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import { userAtom } from "../store/store";
 import { useAtom } from "jotai";
 import { removeToken } from "@/lib/authenticate";
@@ -24,6 +24,11 @@ const Navbar = () => {
     router.push("/register");
   };
 
+  // Check if the current path is Home, Login, or Register
+  const isHomeOrAuthPage = ["/", "/login", "/register"].includes(
+    router.pathname
+  );
+
   return (
     <nav
       className="navbar navbar-expand-lg navbar-light bg-light shadow-sm"
@@ -33,7 +38,6 @@ const Navbar = () => {
         className="container-fluid d-flex align-items-center"
         style={{ height: "100%" }}
       >
-        {/* Logo */}
         <Link href="/" className="navbar-brand d-flex align-items-center">
           <Image
             src="/assets/images/logo.png"
@@ -45,7 +49,6 @@ const Navbar = () => {
           />
         </Link>
 
-        {/* Hamburger Icon for Mobile */}
         <button
           className="navbar-toggler"
           type="button"
@@ -56,7 +59,6 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Offcanvas for collapsed navigation */}
         <div
           className={`offcanvas offcanvas-start ${isOpen ? "show" : ""}`}
           aria-labelledby="offcanvasNavbarLabel"
@@ -74,52 +76,67 @@ const Navbar = () => {
           </div>
           <div className="offcanvas-body">
             <ul className="navbar-nav">
-              <li className="nav-item">
-                <Link href="/" className="nav-link link-hover">
-                  <i className="fas fa-home me-1"></i> Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/about" className="nav-link link-hover">
-                  <i className="fas fa-user-circle me-1"></i> Profile
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/devices" className="nav-link link-hover">
-                  <i className="fas fa-laptop me-1"></i> Your Devices
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/notifications" className="nav-link link-hover">
-                  <i className="fa fa-bell me-1"></i> Notifications
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/data" className="nav-link link-hover">
-                  <i className="fas fa-database me-1"></i> Your Data
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/dashboard" className="nav-link link-hover">
-                  <i className="fa-sharp fa-solid fa-table-columns me-1"></i>{" "}
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                {/* New Interactive Data Hub Link */}
-                <Link href="/interactivedatahub" className="nav-link link-hover">
-                  <i className="fas fa-chart-pie me-1"></i>
-                  Interactive Data Hub
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/settings" className="nav-link link-hover">
-                  <i className="fas fa-cog me-1"></i> Settings
-                </Link>
-              </li>
+              {/* If the user is logged in, show all links */}
+              {user ? (
+                <>
+                  <li className="nav-item">
+                    <Link href="/" className="nav-link link-hover">
+                      <i className="fas fa-home me-1"></i> Home
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/about" className="nav-link link-hover">
+                      <i className="fas fa-user-circle me-1"></i> Profile
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/devices" className="nav-link link-hover">
+                      <i className="fas fa-laptop me-1"></i> Your Devices
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/notifications" className="nav-link link-hover">
+                      <i className="fa fa-bell me-1"></i> Notifications
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/data" className="nav-link link-hover">
+                      <i className="fas fa-database me-1"></i> Your Data
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/dashboard" className="nav-link link-hover">
+                      <i className="fa-sharp fa-solid fa-table-columns me-1"></i>{" "}
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      href="/interactivedatahub"
+                      className="nav-link link-hover"
+                    >
+                      <i className="fas fa-chart-pie me-1"></i>
+                      Interactive Data Hub
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/settings" className="nav-link link-hover">
+                      <i className="fas fa-cog me-1"></i> Settings
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                // Show only the Home link if on Home, Login, or Register page
+                isHomeOrAuthPage && (
+                  <li className="nav-item">
+                    <Link href="/" className="nav-link link-hover">
+                      <i className="fas fa-home me-1"></i> Home
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
 
-            {/* Search Bar */}
             <div className="d-flex align-items-center ms-auto">
               <div className="d-flex border rounded">
                 <input
@@ -133,7 +150,6 @@ const Navbar = () => {
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </button>
               </div>
-              {/* User Info and Auth Buttons */}
               <div className="ms-auto d-flex align-items-center">
                 <FiBell size={24} className="ms-3" />
                 <FiUser size={24} className="me-2" />
@@ -166,14 +182,11 @@ const Navbar = () => {
                   </button>
                 )}
               </div>
-
-              {/* Notification Icon */}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Custom styles for hover and interactivity */}
       <style jsx>{`
         .navbar {
           max-height: 120px;

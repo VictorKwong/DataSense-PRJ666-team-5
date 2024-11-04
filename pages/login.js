@@ -7,7 +7,7 @@ import { useAtom } from "jotai";
 import { userAtom } from "../store/store";
 import Image from "next/image";
 
-export default function Login(props) {
+export default function Login() {
   const { data, status } = useSession();
   const [user, setUser] = useAtom(userAtom);
   const [warning, setWarning] = useState("");
@@ -17,12 +17,13 @@ export default function Login(props) {
 
   async function handleLoginWithEmailPassword(e) {
     e.preventDefault();
+    setWarning(""); // Reset warning message
     try {
       const userData = await loginUser(email, password);
       setUser(userData);
       router.push("/dashboard");
     } catch (err) {
-      setWarning(err.message);
+      setWarning(err.message || 'An error occurred during login');
     }
   }
 
@@ -41,12 +42,13 @@ export default function Login(props) {
           <Form.Group>
             <Form.Control
               placeholder="Email"
-              type="text"
+              type="email"
               id="email"
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="login-input"
+              required
             />
           </Form.Group>
           <br />
@@ -59,6 +61,7 @@ export default function Login(props) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="login-input"
+              required
             />
           </Form.Group>
 
@@ -100,7 +103,6 @@ export default function Login(props) {
           <span className="m-2">Login with Google</span>
         </Button>
 
-        {/* Create Account and Forgot Password links */}
         <div className="additional-options">
           <p>
             <a href="/forgot-password" className="link">
@@ -127,7 +129,7 @@ export default function Login(props) {
           position: relative;
         }
         .login-card {
-          background-color: rgba(255, 255, 255, 0.9); /* Slight transparency to blend with the background */
+          background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
           padding: 60px;
           max-width: 450px;
           width: 100%;

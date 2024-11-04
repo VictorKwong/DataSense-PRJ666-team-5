@@ -32,6 +32,10 @@ config.json: server_api, ws_api
   "server_api": "http://localhost:8080" ->  "server_api": "https://datasensebackend-prj666-team-5.onrender.com",
   "ws_api": "ws://localhost:8080" ->   "ws_api": "wss://datasensebackend-prj666-team-5.onrender.com"
 
+Date: 04-Nov-24
+Setting page: store.js -> export const userAtom = atom(null); // Initialize with null for unauthenticated state
+Add Images into public/assets
+ADd info-hub, alert, and account-settings
 
 ## Getting Started
 

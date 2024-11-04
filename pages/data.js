@@ -8,6 +8,93 @@ import { FaDownload, FaFilter, FaSyncAlt, FaTimes } from 'react-icons/fa'; // Ic
 import { toast, ToastContainer } from 'react-toastify'; // For notifications
 import 'react-toastify/dist/ReactToastify.css';  // Toast notifications CSS
 
+// Styles for various sections
+const headerStyle = {
+  background: "linear-gradient(135deg, #3B82F6, #06B6D4)",
+  color: "#fff",
+  padding: "20px",
+  borderRadius: "8px",
+  textAlign: "center",
+};
+
+const headerTextStyle = {
+  fontSize: "2rem",
+  fontWeight: "bold",
+  margin: 0,
+};
+
+const cardStyle = {
+  borderRadius: "10px",
+  backgroundColor: "#f9f9f9",
+  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+  padding: '20px',
+};
+
+const tableCardStyle = {
+  borderRadius: "10px",
+  backgroundColor: "#fff",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+};
+
+const datePickerStyle = {
+  maxWidth: "160px",
+  padding: "8px",
+  borderRadius: "6px",
+  border: "1px solid #ccc",
+};
+
+const buttonStyle = {
+  padding: "10px 20px",
+  borderRadius: "8px",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  transition: "transform 0.2s ease",
+};
+
+const csvButtonStyle = {
+  padding: "10px 20px",
+  borderRadius: "8px",
+  background: "linear-gradient(135deg, #FF6F91, #FFC107)", // Colorful gradient
+  color: "#fff",
+  border: "none",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  transition: "transform 0.2s ease, background 0.3s ease",
+};
+
+const tableStyle = {
+  width: "100%",
+  margin: "0 auto",
+};
+
+const tableRowEvenStyle = {
+  backgroundColor: "#f1f5f9",
+};
+
+const tableRowOddStyle = {
+  backgroundColor: "#fff",
+};
+
+const filterGroupStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginBottom: '10px',
+};
+
+const labelStyle = {
+  fontWeight: 'bold',
+  marginRight: '10px',
+};
+
+const sliderStyle = {
+  width: '100%',
+  margin: '0 20px',
+};
+
+const rangeTextStyle = {
+  marginLeft: '10px',
+  fontSize: '0.9rem',
+};
+
 export default function Data() {
   const [localData, setLocalData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -83,6 +170,20 @@ export default function Data() {
     setMoistureRange([0, 100]);
     setFilteredData(localData);
     toast.success("Filters cleared", { position: 'top-center' });
+  };
+
+  // Download JSON file
+  const handleDownloadJSON = () => {
+    const json = JSON.stringify(filteredData, null, 2); // Format JSON data
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "sensor_data.json";
+    link.click();
+
+    URL.revokeObjectURL(url); // Cleanup the URL
   };
 
   return (
@@ -181,6 +282,9 @@ export default function Data() {
             >
               <FaDownload className="mr-2" /> Download CSV
             </CSVLink>
+            <button onClick={handleDownloadJSON} className="btn btn-info" style={buttonStyle}>
+              <FaDownload className="mr-2" /> Download JSON
+            </button>
             <button onClick={handleClearFilter} className="btn btn-warning ml-3" style={buttonStyle}>
               <FaTimes className="mr-2" /> Clear Filter
             </button>
@@ -234,90 +338,3 @@ export default function Data() {
     </div>
   );
 }
-
-// Styles for various sections
-const headerStyle = {
-  background: "linear-gradient(135deg, #3B82F6, #06B6D4)",
-  color: "#fff",
-  padding: "20px",
-  borderRadius: "8px",
-  textAlign: "center",
-};
-
-const headerTextStyle = {
-  fontSize: "2rem",
-  fontWeight: "bold",
-  margin: 0,
-};
-
-const cardStyle = {
-  borderRadius: "10px",
-  backgroundColor: "#f9f9f9",
-  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-  padding: '20px',
-};
-
-const tableCardStyle = {
-  borderRadius: "10px",
-  backgroundColor: "#fff",
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-};
-
-const datePickerStyle = {
-  maxWidth: "160px",
-  padding: "8px",
-  borderRadius: "6px",
-  border: "1px solid #ccc",
-};
-
-const buttonStyle = {
-  padding: "10px 20px",
-  borderRadius: "8px",
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  transition: "transform 0.2s ease",
-};
-
-const csvButtonStyle = {
-  padding: "10px 20px",
-  borderRadius: "8px",
-  background: "linear-gradient(135deg, #FF6F91, #FFC107)", // Colorful gradient
-  color: "#fff",
-  border: "none",
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  transition: "transform 0.2s ease, background 0.3s ease",
-};
-
-const tableStyle = {
-  width: "100%",
-  margin: "0 auto",
-};
-
-const tableRowEvenStyle = {
-  backgroundColor: "#f1f5f9",
-};
-
-const tableRowOddStyle = {
-  backgroundColor: "#fff",
-};
-
-const filterGroupStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  marginBottom: '10px',
-};
-
-const labelStyle = {
-  fontWeight: 'bold',
-  marginRight: '10px',
-};
-
-const sliderStyle = {
-  width: '100%',
-  margin: '0 20px',
-};
-
-const rangeTextStyle = {
-  marginLeft: '10px',
-  fontSize: '0.9rem',
-};
