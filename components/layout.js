@@ -1,8 +1,6 @@
 import Footer from "./footer";
 import Sidebar from "./sidebar";
-import Header from "./header";
 import { createContext, useEffect, useState } from "react";
-import config from "@/pages/api/config.json";
 import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/store";
@@ -26,7 +24,11 @@ const Layout = ({ children }) => {
     }
 
     if (!userFromToken) {
-      if (!["/login", "/register", "/"].includes(window.location.pathname)) {
+      if (
+        !["/login", "/register", "/", "/about", "/contact"].includes(
+          window.location.pathname
+        )
+      ) {
         router.replace("/login");
       }
     }
@@ -34,7 +36,7 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     // Connect to the WebSocket server
-    const ws = new WebSocket(config.ws_api);
+    const ws = new WebSocket(process.env.NEXT_PUBLIC_WS_URL);
 
     ws.onmessage = (event) => {
       const newData = JSON.parse(event.data);

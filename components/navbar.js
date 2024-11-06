@@ -25,9 +25,13 @@ const Navbar = () => {
   };
 
   // Check if the current path is Home, Login, or Register
-  const isHomeOrAuthPage = ["/", "/login", "/register"].includes(
-    router.pathname
-  );
+  const isHomeOrAuthPage = [
+    "/",
+    "/login",
+    "/register",
+    "/about",
+    "contact",
+  ].includes(router.pathname);
 
   return (
     <nav
@@ -80,34 +84,19 @@ const Navbar = () => {
               {user ? (
                 <>
                   <li className="nav-item">
-                    <Link href="/" className="nav-link link-hover">
-                      <i className="fas fa-home me-1"></i> Home
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link href="/about" className="nav-link link-hover">
-                      <i className="fas fa-user-circle me-1"></i> Profile
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link href="/devices" className="nav-link link-hover">
-                      <i className="fas fa-laptop me-1"></i> Your Devices
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link href="/notifications" className="nav-link link-hover">
-                      <i className="fa fa-bell me-1"></i> Notifications
+                    <Link href="/dashboard" className="nav-link link-hover">
+                      <i className="fa-sharp fa-solid fa-table-columns me-1"></i>{" "}
+                      Dashboard
                     </Link>
                   </li>
                   <li className="nav-item">
                     <Link href="/data" className="nav-link link-hover">
-                      <i className="fas fa-database me-1"></i> Your Data
+                      <i className="fas fa-database me-1"></i> Data
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link href="/dashboard" className="nav-link link-hover">
-                      <i className="fa-sharp fa-solid fa-table-columns me-1"></i>{" "}
-                      Dashboard
+                    <Link href="/devices" className="nav-link link-hover">
+                      <i className="fas fa-laptop me-1"></i> Devices
                     </Link>
                   </li>
                   <li className="nav-item">
@@ -116,7 +105,18 @@ const Navbar = () => {
                       className="nav-link link-hover"
                     >
                       <i className="fas fa-chart-pie me-1"></i>
-                      Interactive Data Hub
+                      Interactive Hub
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/info-hub" className="nav-link link-hover">
+                      <i class="fas fa-circle-info me-1"></i>
+                      Info Hub
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/alert" className="nav-link link-hover">
+                      <i className="fa fa-bell me-1"></i> Alert
                     </Link>
                   </li>
                   <li className="nav-item">
@@ -128,28 +128,28 @@ const Navbar = () => {
               ) : (
                 // Show only the Home link if on Home, Login, or Register page
                 isHomeOrAuthPage && (
-                  <li className="nav-item">
-                    <Link href="/" className="nav-link link-hover">
-                      <i className="fas fa-home me-1"></i> Home
-                    </Link>
-                  </li>
+                  <>
+                    <li className="nav-item">
+                      <Link href="/" className="nav-link link-hover">
+                        <i className="fas fa-home me-1"></i> Home
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link href="/about" className="nav-link link-hover">
+                        <i class="fas fa-address-card me-1"></i> About
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link href="/contact" className="nav-link link-hover">
+                        <i class="fa fa-solid fa-phone me-1"></i> Contact
+                      </Link>
+                    </li>
+                  </>
                 )
               )}
             </ul>
 
             <div className="d-flex align-items-center ms-auto">
-              <div className="d-flex border rounded">
-                <input
-                  className="form-control-plaintext"
-                  style={{ padding: "0 5px" }}
-                  type="search"
-                  placeholder="Search"
-                  aria-label="Search"
-                />
-                <button className="border-0 bg-transparent shadow-none">
-                  <i className="fa-solid fa-magnifying-glass"></i>
-                </button>
-              </div>
               <div className="ms-auto d-flex align-items-center">
                 <FiBell size={24} className="ms-3" />
                 <FiUser size={24} className="me-2" />
