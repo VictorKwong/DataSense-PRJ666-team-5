@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Footer = () => {
   return (
     <footer
@@ -27,24 +29,25 @@ const Footer = () => {
 
             <ul className="list-unstyled mb-0">
               <li>
-                <a href="/home" className="text-white">
+                <Link href="/home" className="text-white">
                   Home
-                </a>
+                </Link>
+                
               </li>
               <li>
-                <a href="/about" className="text-white">
+                <Link href="/about" className="text-white">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/contact" className="text-white">
+                <Link href="/contact" className="text-white">
                   Contact
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/privacy" className="text-white">
+                <Link href="/privacy" className="text-white">
                   Privacy Policy
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

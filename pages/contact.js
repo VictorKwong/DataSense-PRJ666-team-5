@@ -8,8 +8,8 @@ const Contact = () => {
     <Container fluid className="contact-page" style={containerStyle}>
       <h1 className="text-center mb-4" style={headerStyle}>Get in Touch</h1>
       <p className="text-center mb-5" style={introTextStyle}>
-        We'd love to hear from you! Whether you have a question, feedback, or just want to connect,
-        our team is here to help. Reach out using any of the options below, and we'll get back to
+        We&apos;d love to hear from you! Whether you have a question, feedback, or just want to connect,
+        our team is here to help. Reach out using any of the options below, and we&apos;ll get back to
         you as soon as possible.
       </p>
 
