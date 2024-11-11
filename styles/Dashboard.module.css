@@ -1,36 +1,18 @@
-/* Dashboard.module.css* for the sidebar/
+/* Dashboard.module.css */
 
-/* .cardsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: space-between;
-  margin-top: 40px;
-  margin-bottom: 40px;
-
-  @media (max-width: 640px) {
-    justify-content: center;
-  }
-}
-
-.card {
-  border: none;
-
-  @media (max-width: 576px) {
-    border: none;
-  }
-} */
-
+/* Container for Quick Links and Quick View sections */
 .favoritesQuickView {
   display: flex;
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 30px;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
+/* General Card Styling */
 .simpleItem {
   flex: 1;
-  background-color: #f0f4f8; /* Default light grey */
+  background-color: #f0f4f8;
   border-radius: 10px;
   padding: 20px;
   transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
@@ -44,18 +26,20 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
+/* Background colors for different sections */
 .favoritesBackground {
-  background-color: #fff3cd; /* Light yellow background */
+  background: linear-gradient(135deg, #fff3cd, #f9e5ab); /* Light yellow gradient */
 }
 
 .quickViewBackground {
-  background-color: #f3e5f5; /* Light purple background */
+  background: linear-gradient(135deg, #f3e5f5, #e1ccec); /* Light purple gradient */
 }
 
+/* Styling for individual links in Quick Links */
 .favoriteItem {
   list-style: none;
-  padding: 10px;
-  margin: 0;
+  padding: 12px;
+  margin: 8px 0; /* Adds vertical spacing between items */
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
   display: flex;
@@ -66,24 +50,27 @@
 }
 
 .favoriteItem:hover {
-  background-color: #ffeeba; /* Light yellow hover */
+  background-color: #ffeeba;
   transform: scale(1.05);
 }
 
-.favoriteItem a {
-  text-decoration: none;
-  color: #111827;
+/* Consistent font size and spacing between text and arrow icon for Quick Links and Quick View items */
+.favoriteItem a, .quickViewItem {
+  font-size: 1.1em; /* Consistent font size for both */
   font-weight: bold;
-}
-
-.quickViewItem {
+  color: #111827;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px; /* Adds space between text and icon */
+}
+
+/* Styling for Quick View Items */
+.quickViewItem {
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 10px;
   transition: background-color 0.3s, transform 0.3s;
 }
@@ -98,6 +85,7 @@
   color: #007bff;
 }
 
+/* Cards container styling */
 .cardsContainer {
   display: flex;
   flex-wrap: wrap;
@@ -105,54 +93,135 @@
   justify-content: space-between;
   margin-top: 40px;
   margin-bottom: 40px;
+}
 
-  @media (max-width: 768px) {
-    justify-content: center;
+@media (max-width: 768px) {
+  .cardsContainer {
+    justify-content: center; /* Center on smaller screens */
   }
 }
 
+/* Individual Card Styling */
 .card {
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef); /* Light grey gradient */
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, background-color 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
   max-width: 300px;
+  width: 100%;
   margin-bottom: 20px;
+}
 
-  &:hover {
-    transform: translateY(-5px);
-  }
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
 
-  @media (max-width: 576px) {
+@media (max-width: 576px) {
+  .card {
     max-width: 100%;
-    margin-bottom: 20px;
   }
 }
 
+/* Card content and image styling */
 .card-body {
   padding: 20px;
+  text-align: center;
 }
 
 .card-img-top {
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+  width: 100%;
+  height: auto;
+  transition: opacity 0.3s;
 }
 
+.card-img-top:hover {
+  opacity: 0.9;
+}
+
+/* Button styling for card actions */
 .cardButton {
   color: white;
   border: none;
   padding: 10px 20px;
   font-weight: bold;
-  background: linear-gradient(135deg, #343a40 0%, #007bff 100%);
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-  }
+  background: linear-gradient(135deg, #343a40, #007bff);
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s;
 }
 
+.cardButton:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Header title text */
 .titleText {
   color: #343a40;
   font-size: 2rem;
   font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+.latestData {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+}
+
+.expandButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  margin-top: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s;
+}
+
+.expandButton:hover {
+  background-color: #0056b3;
+}
+
+.quickViewItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.quickViewItem a {
+  text-decoration: none;
+  color: #007bff;
+  font-size: 1.1em;
+}
+
+.quickViewItem a:hover {
+  text-decoration: underline;
+}
+
+.simpleItem {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cardsContainer {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }

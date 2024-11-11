@@ -30,7 +30,8 @@ const Navbar = () => {
     "/login",
     "/register",
     "/about",
-    "contact",
+    "/contact",
+    "/privacy"
   ].includes(router.pathname);
 
   return (
@@ -110,7 +111,7 @@ const Navbar = () => {
                   </li>
                   <li className="nav-item">
                     <Link href="/info-hub" className="nav-link link-hover">
-                      <i class="fas fa-circle-info me-1"></i>
+                    <i className="fa fa-circle-info me-1"></i>
                       Info Hub
                     </Link>
                   </li>
@@ -120,7 +121,7 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link href="/settings" className="nav-link link-hover">
+                    <Link href="/account-settings" className="nav-link link-hover">
                       <i className="fas fa-cog me-1"></i> Settings
                     </Link>
                   </li>
@@ -136,12 +137,12 @@ const Navbar = () => {
                     </li>
                     <li className="nav-item">
                       <Link href="/about" className="nav-link link-hover">
-                        <i class="fas fa-address-card me-1"></i> About
+                        <i className="fa fa-address-card me-1"></i> About
                       </Link>
                     </li>
                     <li className="nav-item">
                       <Link href="/contact" className="nav-link link-hover">
-                        <i class="fa fa-solid fa-phone me-1"></i> Contact
+                        <i className="fa fa-solid fa-phone me-1"></i> Contact
                       </Link>
                     </li>
                   </>

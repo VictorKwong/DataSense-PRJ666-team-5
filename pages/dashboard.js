@@ -1,8 +1,7 @@
-import { RealtimeDataContext } from "@/components/layout";
 import { useContext, useEffect, useState } from "react";
-import styles from "../styles/Dashboard.module.css"; // Import custom CSS module
+import { RealtimeDataContext } from "@/components/layout"; // Access latest data from context
+import styles from "../styles/Dashboard.module.css";
 import Image from "next/image";
-import ExpandableItem from "@/components/Item/ExpandableItem";
 import SimpleItem from "@/components/Item/SimpleItem";
 import Link from "next/link";
 import { useRouter } from 'next/router';
@@ -10,18 +9,19 @@ import { isAuthenticated } from '@/lib/authenticate';
 import LoadingPage from "@/components/loadingPage";
 
 // Suggested Image Sources
-import DeviceSetupImage from "@/public/assets/images/device-setup.webp"; // Replace with your image
-import DevicesImage from "@/public/assets/images/devices.webp"; // Replace with your image
-import DataImage from "@/public/assets/images/data-graph.webp"; // Replace with your image
+import SetupGuideImage from "@/public/assets/images/setup-guide.webp";
+import MonitoringImage from "@/public/assets/images/monitoring.webp";
+import ReportsImage from "@/public/assets/images/reports.webp";
 
 export default function Dashboard() {
-  const realtimeData = useContext(RealtimeDataContext);
+  const latestData = useContext(RealtimeDataContext); // Access latest data from context
   const router = useRouter();
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false); // State to toggle expandable content
 
   useEffect(() => {
     const checkAuth = async () => {
-      const authenticated = await isAuthenticated(); // Check authentication
+      const authenticated = await isAuthenticated();
       if (!authenticated) {
         router.push('/');
       } else {
@@ -32,35 +32,34 @@ export default function Dashboard() {
     checkAuth();
   }, [router]);
 
-  // If loading, return a loading indicator (or null)
   if (loading) {
     return <LoadingPage />;
   }
 
   const items = [
     {
-      src: DeviceSetupImage,
-      name: "Add Device",
-      link: "#",
-      buttonText: "Add Device",
-      icon: <i className="far fa-plus-square"></i>,
-      color: "#dc3545", // Red color for the card
+      src: SetupGuideImage,
+      name: "Setup Guide",
+      link: "/setup-guide",
+      buttonText: "Setup Guide",
+      icon: <i className="fas fa-tools"></i>,
+      color: "#17a2b8",
     },
     {
-      src: DevicesImage,
-      name: "Your Devices",
-      link: "/devices",
-      buttonText: "Manage Devices",
-      icon: <i className="fas fa-laptop me-2"></i>,
-      color: "#28a745", // Green color for the card
+      src: MonitoringImage,
+      name: "Monitoring",
+      link: "/interactive-data-hub",
+      buttonText: "Interactive Data Hub",
+      icon: <i className="fas fa-eye"></i>,
+      color: "#ffc107",
     },
     {
-      src: DataImage,
-      name: "Your Data",
-      link: "/data",
-      buttonText: "View Data",
-      icon: <i className="fas fa-database me-2"></i>,
-      color: "#007bff", // Blue color for the card
+      src: ReportsImage,
+      name: "Reports",
+      link: "/reports",
+      buttonText: "View Reports",
+      icon: <i className="fas fa-chart-line"></i>,
+      color: "#007bff",
     },
   ];
 
@@ -74,60 +73,88 @@ export default function Dashboard() {
           Welcome back, User
         </h1>
 
-        {/* Favorites and Quick View Section */}
-        <div className={styles.dataBody}>
-          <div className={styles.favoritesQuickView}>
-            {/* Favorites Section */}
-            <SimpleItem
-              className={`${styles.simpleItem} ${styles.favoritesBackground}`}
-              key={"Favourites"}
-              title={"Favourites"}
-              icon={<i className="fa-solid fa-star"></i>}
-            >
-              <ul>
-                <li className={styles.favoriteItem}>
-                  <h3>
-                    <Link href="/devices/Warehouse">
-                      Warehouse
-                      <i className="fa-solid fa-square-up-right"></i>
-                    </Link>
-                  </h3>
-                </li>
-              </ul>
-            </SimpleItem>
+        {/* Quick Links and Quick View Section */}
+        <div className={styles.favoritesQuickView}>
+          <SimpleItem
+            className={`${styles.simpleItem} ${styles.favoritesBackground}`}
+            key={"Quick Links"}
+            title={"Quick Links"}
+            icon={<i className="fa-solid fa-link"></i>}
+          >
+            <ul>
+              <li className={styles.favoriteItem}>
+                <h3>
+                  <Link href="/contact">
+                    Contact
+                  </Link>
+                </h3>
+              </li>
+              <li className={styles.favoriteItem}>
+                <h3>
+                  <Link href="/about">
+                    About
+                  </Link>
+                </h3>
+              </li>
+              <li className={styles.favoriteItem}>
+                <h3>
+                  <Link href="/info-hub">
+                    Info Hub
+                  </Link>
+                </h3>
+              </li>
+            </ul>
+          </SimpleItem>
 
-            {/* Quick View Section */}
-            <SimpleItem
-              className={`${styles.simpleItem} ${styles.quickViewBackground}`}
-              key={"Quick View"}
-              title={"Quick View"}
-              icon={<i className="fa-sharp fa-solid fa-eye"></i>}
-            >
-              <ul>
-                <li className={styles.quickViewItem}>
-                  <Link href="/devices/Warehouse">
-                    Warehouse
-                    <i className="fas fa-plus"></i>
-                  </Link>
-                </li>
-                <li className={styles.quickViewItem}>
-                  <Link href="/devices/Home">
-                    Home
-                    <i className="fas fa-plus"></i>
-                  </Link>
-                </li>
-                <li className={styles.quickViewItem}>
-                  <Link href="/devices/Greenhouse">
-                    Greenhouse
-                    <i className="fas fa-plus"></i>
-                  </Link>
-                </li>
-              </ul>
-            </SimpleItem>
-          </div>
+          {/* Quick View Section with Real-Time Data */}
+          <SimpleItem
+            className={`${styles.simpleItem} ${styles.quickViewBackground}`}
+            key={"Quick View"}
+            title={"Quick View"}
+            icon={<i className="fa-sharp fa-solid fa-eye"></i>}
+          >
+            <ul>
+              <li className={styles.quickViewItem}>
+                <Link href="/data">
+                  View Data
+                </Link>
+                {latestData ? (
+                  <div className={styles.latestData}>
+                    <p><strong>Latest Data:</strong></p>
+                    <p>Temperature: {latestData.temperature}°C</p>
+                    {isExpanded && (
+                      <>
+                        <p>Humidity: {latestData.humidity}%</p>
+                        <p>Moisture: {latestData.moisture}%</p>
+                        <p>Timestamp: {new Date(latestData.timestamp).toLocaleString()}</p>
+                      </>
+                    )}
+                    <button
+                      className={styles.expandButton}
+                      onClick={() => setIsExpanded(!isExpanded)}
+                    >
+                      {isExpanded ? "Show Less" : "Show More"}
+                    </button>
+                  </div>
+                ) : (
+                  <p>Loading latest data...</p>
+                )}
+              </li>
+              <li className={styles.quickViewItem}>
+                <Link href="/devices">
+                  Devices
+                </Link>
+              </li>
+              <li className={styles.quickViewItem}>
+                <Link href="/interactive-data-hub">
+                  Interactive Data Hub
+                </Link>
+              </li>
+            </ul>
+          </SimpleItem>
         </div>
 
-        {/* Card Section for Devices and Data */}
+        {/* Card Section with Updated Items */}
         <div className={styles.cardsContainer}>
           {items.map((item, index) => (
             <div

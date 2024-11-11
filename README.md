@@ -37,6 +37,12 @@ Setting page: store.js -> export const userAtom = atom(null); // Initialize with
 Add Images into public/assets
 ADd info-hub, alert, and account-settings
 
+Date: 11-Nov-24
+fontawesome className update
+Modified Layout.js, navbar.js, dashboard.js, info-hub.js
+Add about.js contact.js, privacy.js
+Images added
+
 ## Getting Started
 
 First, run the development server:

@@ -129,7 +129,7 @@ function InfoHub() {
           <ul>
             <li>Ensure consistent watering schedules based on soil moisture levels.</li>
             <li>Monitor temperature changes and adjust irrigation or shading as needed.</li>
-            <li>Choose sensors that match your crop&apos;s environmental requirements.</li>
+            <li>Choose sensors that match your crop's environmental requirements.</li>
           </ul>
 
           {/* Resources */}
