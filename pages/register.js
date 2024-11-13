@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import { registerUser } from "@/lib/authenticate";
 import { userAtom } from "../store/store";
 import { useAtom } from "jotai";
+import Link from "next/link";
 
 const Register = () => {
   const [user, setUser] = useAtom(userAtom);
@@ -108,9 +109,9 @@ const Register = () => {
           <label>
             <input className="mt-2 mb-2" type="checkbox" required /> I agree to
             the{" "}
-            <a href="/terms" className="terms-link">
+            <Link href="/terms" className="terms-link">
               terms and conditions
-            </a>
+            </Link>
           </label>
 
           <div className="register-button-container">
