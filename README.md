@@ -1,49 +1,48 @@
 # DataSense
 
 Update UI
-Date: 13-Oct-24
+### Date: 13-Oct-24
 npm install react-csv
 npm install react-datepicker
 npm install react-toastify
 npm install react-chartjs-2 chart.js
 npm install react-circular-progressbar
 
-Date: 15-Oct-24
+### Date: 15-Oct-24
 Password Regex update special character inclusion
 - Apple12345 (fail)
 - !Apple1234 (pass)
 
-Date: 16-Oct-24
+### Date: 16-Oct-24
 Navbar update (login and logout)
 Update data.js timezone
 
-Date: 28-Oct-24
+### Date: 28-Oct-24
 Navbar update
 Update layout.js
-=======
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-Date: 29-Oct-24
+### Date: 29-Oct-24
 Update authenticate.js (Port 8080 -> process.env.NEXT_PUBLIC_API_URL)
 Update Vercel Env NEXT_PUBLIC_API_URL = https://datasensebackend-prj666-team-5.onrender.com
 
-Date: 31-Oct-24
+### Date: 31-Oct-24
 config.json: server_api, ws_api
   "server_api": "http://localhost:8080" ->  "server_api": "https://datasensebackend-prj666-team-5.onrender.com",
   "ws_api": "ws://localhost:8080" ->   "ws_api": "wss://datasensebackend-prj666-team-5.onrender.com"
 
-Date: 04-Nov-24
+### Date: 04-Nov-24
 Setting page: store.js -> export const userAtom = atom(null); // Initialize with null for unauthenticated state
 Add Images into public/assets
 ADd info-hub, alert, and account-settings
 
-Date: 11-Nov-24
+### Date: 11-Nov-24
 fontawesome className update
 Modified Layout.js, navbar.js, dashboard.js, info-hub.js
 Add about.js contact.js, privacy.js
 Images added
 
-Date: 12-Nov-24
+### Date: 12-Nov-24
 Add Layout.css, Terms.css, Alert.css
 Add terms.js
 Update info-hub.js, interactivedatahub.js, dashboard.js, alert.js, layout.js, navbar.js
