@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Line, Bar, Pie } from "react-chartjs-2";
-import { Chart, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';  // Import necessary components
+import { useEffect, useState, useRef } from "react";
+import { Line, Bar, Pie, Radar, Doughnut, PolarArea } from "react-chartjs-2";
+import { Chart, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, RadialLinearScale, Title, Tooltip, Legend } from 'chart.js';
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import 'react-circular-progressbar/dist/styles.css';
 import DatePicker from "react-datepicker";
@@ -9,8 +9,7 @@ import { getSensorHistoryData } from "./api/sensor";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Register Chart.js components
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
+Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, RadialLinearScale, Title, Tooltip, Legend);
 
 export default function InteractiveDataHub() {
   const [sensorData, setSensorData] = useState([]);
@@ -22,10 +21,11 @@ export default function InteractiveDataHub() {
   const [selectedComparison, setSelectedComparison] = useState(null);
   const [selectedGraphType, setSelectedGraphType] = useState("line");
   const [errorMessage, setErrorMessage] = useState(null);
-  const [isAutoRefreshOn, setIsAutoRefreshOn] = useState(false); // Auto-refresh toggle
-  const [refreshInterval, setRefreshInterval] = useState(5000); // Refresh interval
+  const [isAutoRefreshOn, setIsAutoRefreshOn] = useState(false);
+  const [refreshInterval, setRefreshInterval] = useState(5000);
 
-  // Fetch data on mount and auto-refresh
+  const chartRef = useRef(null);
+
   useEffect(() => {
     fetchLatestData();
 
@@ -36,13 +36,12 @@ export default function InteractiveDataHub() {
     return () => clearInterval(interval);
   }, [isAutoRefreshOn, refreshInterval]);
 
-  // Fetch latest data function
   const fetchLatestData = async () => {
     try {
       const data = await getSensorHistoryData();
       if (Array.isArray(data)) {
         setSensorData(data);
-        setFilteredData(data.slice(-5)); // Show the last 5 data points initially
+        setFilteredData(data.slice(-5));
         if (data.length > 0) {
           const latest = data[data.length - 1];
           setLatestData({
@@ -62,7 +61,6 @@ export default function InteractiveDataHub() {
     }
   };
 
-  // Check if data crosses any threshold and notify
   const checkThresholds = (data) => {
     if (data.temperature > 40) {
       toast.error("Temperature exceeded 40°C!", { position: "top-right" });
@@ -72,7 +70,6 @@ export default function InteractiveDataHub() {
     }
   };
 
-  // Filter data by date range
   const handleFilter = () => {
     if (startDate && endDate) {
       const filtered = sensorData.filter((entry) => {
@@ -85,7 +82,6 @@ export default function InteractiveDataHub() {
     }
   };
 
-  // Clear all filters and selections
   const handleClearFilter = () => {
     setStartDate(null);
     setEndDate(null);
@@ -95,7 +91,6 @@ export default function InteractiveDataHub() {
     setFilteredData(sensorData.slice(-5));
   };
 
-  // Prepare chart data
   const chartData = {
     labels: filteredData.map((entry) => new Date(entry.timestamp).toLocaleTimeString()),
     datasets: [
@@ -126,14 +121,34 @@ export default function InteractiveDataHub() {
     ].filter(Boolean),
   };
 
-    return (
-      <div className="interactive-data-hub-container">
-        <h1>Interactive Data Hub</h1>
+  const chartOptions = {
+    maintainAspectRatio: false,
+    aspectRatio: 2,
+    responsive: true,
+    scales: {
+      x: { display: true, title: { display: true, text: "Time" } },
+      y: { display: true, title: { display: true, text: "Value" } }
+    }
+  };
 
-        {/* Toast Notifications */}
-        <ToastContainer />
+  const downloadChart = () => {
+    const chartInstance = chartRef.current;
+    const link = document.createElement("a");
+    link.href = chartInstance.toBase64Image();
+    link.download = "chart.png";
+    link.click();
+  };
 
-        {/* Latest Data Circular Gauges */}
+  return (
+    <div className="interactive-data-hub-container">
+      <h1>Interactive Data Hub</h1>
+
+      {/* Toast Notifications */}
+      <ToastContainer />
+
+      {/* Latest Data Gauges */}
+      <section className="gauge-section">
+        <h2>Latest Data</h2>
         <div className="latest-data-gauges">
           <div className="gauge-card">
             <CircularProgressbar
@@ -172,73 +187,41 @@ export default function InteractiveDataHub() {
             <p>Moisture</p>
           </div>
         </div>
+      </section>
 
-        {/* Manual Update and Auto-Refresh Toggle */}
-        <div className="manual-update">
-          <button onClick={fetchLatestData} className="btn-update">
-            Refresh Data
-          </button>
-          <div className="auto-refresh-toggle">
-            <label>
-              <input
-                type="checkbox"
-                checked={isAutoRefreshOn}
-                onChange={() => setIsAutoRefreshOn(!isAutoRefreshOn)}
-              />
-              Auto-Refresh
-            </label>
-          </div>
-        </div>
-
-        {/* Date Filter */}
+      {/* Controls Section */}
+      <section className="controls-section">
+        <h2>Controls</h2>
+        <button onClick={fetchLatestData} className="btn-update">Refresh Data</button>
         <div className="filter-container">
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            selectsStart
-            startDate={startDate}
-            endDate={endDate}
-            placeholderText="Start Date"
-            className="date-picker"
-          />
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            selectsEnd
-            startDate={startDate}
-            endDate={endDate}
-            placeholderText="End Date"
-            className="date-picker"
-          />
-          <button onClick={handleFilter} className="btn-filter">
-            Apply Filter
-          </button>
-          <button onClick={handleClearFilter} className="btn-clear">
-            Clear Filter
-          </button>
+          <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} placeholderText="Start Date" />
+          <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} placeholderText="End Date" />
+          <button onClick={handleFilter} className="btn-filter">Apply Filter</button>
+          <button onClick={handleClearFilter} className="btn-clear">Clear Filter</button>
         </div>
-
-        {/* Data Type and Graph Type Selection */}
-        <div className="selection-container">
+        <div className="select-container">
           <label>
-            Select Data Type:
-            <select value={selectedDataType} onChange={(e) => setSelectedDataType(e.target.value)} className="select-style">
+            Data Type:
+            <select value={selectedDataType} onChange={(e) => setSelectedDataType(e.target.value)}>
               <option value="temperature">Temperature</option>
               <option value="humidity">Humidity</option>
               <option value="moisture">Moisture</option>
             </select>
           </label>
           <label>
-            Select Graph Type:
-            <select value={selectedGraphType} onChange={(e) => setSelectedGraphType(e.target.value)} className="select-style">
+            Graph Type:
+            <select value={selectedGraphType} onChange={(e) => setSelectedGraphType(e.target.value)}>
               <option value="line">Line Chart</option>
               <option value="bar">Bar Chart</option>
               <option value="pie">Pie Chart</option>
+              <option value="radar">Radar Chart</option>
+              <option value="doughnut">Doughnut Chart</option>
+              <option value="polarArea">Polar Area Chart</option>
             </select>
           </label>
           <label>
-            Compare with:
-            <select value={selectedComparison} onChange={(e) => setSelectedComparison(e.target.value)} className="select-style">
+            Compare Data:
+            <select value={selectedComparison} onChange={(e) => setSelectedComparison(e.target.value)}>
               <option value="">None</option>
               <option value="temperature">Temperature</option>
               <option value="humidity">Humidity</option>
@@ -246,136 +229,128 @@ export default function InteractiveDataHub() {
             </select>
           </label>
         </div>
+      </section>
 
-        {errorMessage ? (
-          <div className="error-message">
-            <h2>{errorMessage}</h2>
-          </div>
-        ) : (
-          <div className="chart-container">
-            {selectedGraphType === "line" && <Line data={chartData} options={{ maintainAspectRatio: false }} />}
-            {selectedGraphType === "bar" && <Bar data={chartData} options={{ maintainAspectRatio: false }} />}
-            {selectedGraphType === "pie" && <Pie data={chartData} options={{ maintainAspectRatio: false }} />}
-          </div>
-        )}
+      {/* Chart Section */}
+      <section className="chart-section">
+        <div className="chart-container" style={{ height: '300px' }}>
+          {selectedGraphType === "line" && <Line ref={chartRef} data={chartData} options={chartOptions} />}
+          {selectedGraphType === "bar" && <Bar ref={chartRef} data={chartData} options={chartOptions} />}
+          {selectedGraphType === "pie" && <Pie ref={chartRef} data={chartData} options={chartOptions} />}
+          {selectedGraphType === "radar" && <Radar ref={chartRef} data={chartData} options={chartOptions} />}
+          {selectedGraphType === "doughnut" && <Doughnut ref={chartRef} data={chartData} options={chartOptions} />}
+          {selectedGraphType === "polarArea" && <PolarArea ref={chartRef} data={chartData} options={chartOptions} />}
+        </div>
 
-        <style jsx>{`
-          .interactive-data-hub-container {
-            padding: 20px;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            min-height: 100vh;
-          }
-          h1 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 40px;
-            color: #333;
-          }
-          .latest-data-gauges {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 40px;
-          }
-          .gauge-card {
-            width: 150px;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-          }
-          .manual-update {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-          }
-          .btn-update {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-          }
-          .btn-update:hover {
-            background-color: #218838;
-          }
-          .auto-refresh-toggle {
-            margin-left: 20px;
-            display: flex;
-            align-items: center;
-          }
-          .auto-refresh-toggle label {
-            font-size: 1rem;
-            margin-left: 5px;
-          }
-          .filter-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            gap: 15px;
-          }
-          .date-picker {
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-          }
-          .btn-filter, .btn-clear {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-          }
-          .btn-clear {
-            background-color: #f44336;
-          }
-          .btn-filter:hover {
-            background-color: #0056b3;
-          }
-          .btn-clear:hover {
-            background-color: #c62828;
-          }
-          .selection-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            gap: 15px;
-          }
-          label {
-            font-size: 1.2rem;
-            margin-right: 10px;
-          }
-          .select-style {
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 1rem;
-            margin-left: 10px;
-            outline: none;
-            transition: border 0.3s ease;
-          }
-          .select-style:focus {
-            border: 1px solid #007bff;
-          }
-          .chart-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 40px auto;
-          }
-          .error-message {
-            text-align: center;
-            color: red;
-            font-size: 1.5rem;
-            margin-top: 20px;
-          }
-        `}</style>
-      </div>
-    );
+        {/* Buttons positioned below chart container */}
+        <div className="button-container">
+          <button onClick={downloadChart} className="btn-download">Download Graph</button>
+          <button onClick={() => toast.info("Navigating to Alerts...")} className="btn-alert">Go to Alert</button>
+        </div>
+      </section>
+
+      <style jsx>{`
+        .interactive-data-hub-container {
+          padding: 20px;
+          font-family: 'Poppins', sans-serif;
+          background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        h1 {
+          font-size: 2.5rem;
+          color: #007bff;
+          margin-bottom: 20px;
+          font-weight: bold;
+        }
+        h2 {
+          font-size: 1.5rem;
+          color: #333;
+          margin-bottom: 15px;
+          text-align: center;
+        }
+        .gauge-section, .controls-section, .chart-section {
+          background: white;
+          border-radius: 10px;
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+          padding: 20px;
+          width: 90%;
+          max-width: 800px;
+          margin-bottom: 20px;
+        }
+        .latest-data-gauges {
+          display: flex;
+          justify-content: space-around;
+          gap: 20px;
+        }
+        .gauge-card {
+          text-align: center;
+          width: 100px;
+        }
+        .controls-section {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 15px;
+        }
+        .filter-container {
+          display: flex;
+          gap: 15px;
+          align-items: center;
+          justify-content: center;
+          margin-top: 10px;
+          width: 100%;
+        }
+        .select-container {
+          display: flex;
+          gap: 15px;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          margin-top: 10px;
+        }
+        .chart-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          max-width: 600px;
+        }
+        .button-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 15px;
+          margin-top: 15px; /* Space between chart and buttons */
+        }
+        .btn-update, .btn-filter, .btn-clear, .btn-download, .btn-alert {
+          padding: 12px 20px;
+          border: none;
+          border-radius: 25px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s, transform 0.2s;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          color: white;
+        }
+        .btn-update, .btn-filter {
+          background: #007bff;
+        }
+        .btn-clear {
+          background: #f44336;
+        }
+        .btn-download {
+          background: #28a745;
+        }
+        .btn-alert {
+          background: #ffca28;
+        }
+        .btn-download:hover, .btn-alert:hover, .btn-update:hover, .btn-filter:hover, .btn-clear:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+      `}</style>
+    </div>
+  );
 }

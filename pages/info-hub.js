@@ -1,7 +1,10 @@
-import { Card, Container, Row, Col, ListGroup, Button } from "react-bootstrap";
+import { useState, useContext, useEffect } from "react";
+import { Card, Container, Row, Col, ListGroup, Button, Form } from "react-bootstrap";
 import Image from "next/image";
 import { FaThermometerHalf, FaTint, FaSeedling } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { RealtimeDataContext } from "@/components/layout";
+import Link from "next/link"; // Import Link for navigation
 
 const cropData = [
   {
@@ -34,6 +37,34 @@ const cropData = [
 ];
 
 function InfoHub() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeLink, setActiveLink] = useState("#crops");  // Track active section
+  const latestData = useContext(RealtimeDataContext);
+
+  // Filtered crops based on the search term
+  const filteredCrops = cropData.filter((crop) =>
+    crop.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Handle scroll and update active link based on the visible section
+  useEffect(() => {
+    const onScroll = () => {
+      const sections = ["#crops", "#sensors", "#tips", "#resources"];
+      sections.forEach((section) => {
+        const element = document.querySelector(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 0 && rect.bottom >= 0) {
+            setActiveLink(section);  // Set active section
+          }
+        }
+      });
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <Container fluid className="info-hub p-0">
       <Row>
@@ -41,16 +72,48 @@ function InfoHub() {
         <Col md={3} className="sidebar p-4">
           <h3 className="text-center mb-4">Info Hub Navigation</h3>
           <ListGroup variant="flush">
-            <ListGroup.Item action href="#crops" className="sidebar-link">
+            <ListGroup.Item
+              action
+              href="#crops"
+              className={`sidebar-link ${activeLink === "#crops" ? "active" : ""}`}
+              onClick={() => setActiveLink("#crops")}
+              style={{
+                backgroundColor: activeLink === "#crops" ? "rgba(0, 123, 255, 0.2)" : "",
+              }}
+            >
               <Button variant="outline-primary" className="w-100">Crop Information</Button>
             </ListGroup.Item>
-            <ListGroup.Item action href="#sensors" className="sidebar-link">
+            <ListGroup.Item
+              action
+              href="#sensors"
+              className={`sidebar-link ${activeLink === "#sensors" ? "active" : ""}`}
+              onClick={() => setActiveLink("#sensors")}
+              style={{
+                backgroundColor: activeLink === "#sensors" ? "rgba(0, 123, 255, 0.2)" : "",
+              }}
+            >
               <Button variant="outline-primary" className="w-100">Recommended Sensors</Button>
             </ListGroup.Item>
-            <ListGroup.Item action href="#tips" className="sidebar-link">
+            <ListGroup.Item
+              action
+              href="#tips"
+              className={`sidebar-link ${activeLink === "#tips" ? "active" : ""}`}
+              onClick={() => setActiveLink("#tips")}
+              style={{
+                backgroundColor: activeLink === "#tips" ? "rgba(0, 123, 255, 0.2)" : "",
+              }}
+            >
               <Button variant="outline-primary" className="w-100">General Growing Tips</Button>
             </ListGroup.Item>
-            <ListGroup.Item action href="#resources" className="sidebar-link">
+            <ListGroup.Item
+              action
+              href="#resources"
+              className={`sidebar-link ${activeLink === "#resources" ? "active" : ""}`}
+              onClick={() => setActiveLink("#resources")}
+              style={{
+                backgroundColor: activeLink === "#resources" ? "rgba(0, 123, 255, 0.2)" : "",
+              }}
+            >
               <Button variant="outline-primary" className="w-100">Resources</Button>
             </ListGroup.Item>
           </ListGroup>
@@ -65,10 +128,18 @@ function InfoHub() {
             </p>
           </div>
 
-          {/* Crop Information Section */}
+          {/* Crop Information Section with Search */}
           <h2 id="crops" className="section-header mb-4">Crop Information</h2>
+          <Form className="mb-4">
+            <Form.Control
+              type="text"
+              placeholder="Search for a crop..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </Form>
           <Row>
-            {cropData.map((crop, index) => (
+            {filteredCrops.map((crop, index) => (
               <Col md={6} lg={4} key={index} className="mb-4">
                 <Card className="h-100 crop-card shadow-sm rounded hover-effect">
                   <div className="card-img-container">
@@ -98,25 +169,35 @@ function InfoHub() {
                         <strong>Optimal Soil Moisture:</strong> {crop.optimalSoilMoisture}
                       </ListGroup.Item>
                     </ListGroup>
-                    <Card.Text>
-                      <strong>Recommended Sensors:</strong>
-                    </Card.Text>
-                    <ul>
-                      {crop.sensors.map((sensor, i) => (
-                        <li key={i}>{sensor}</li>
-                      ))}
-                    </ul>
+
+                    {/* Real-Time Sensor Data */}
+                    <h6 className="mt-3">Current Sensor Data:</h6>
+                    {latestData ? (
+                      <ListGroup variant="flush">
+                        <ListGroup.Item>
+                          <FaThermometerHalf className="icon me-2" /> 
+                          <strong>Temperature:</strong> {latestData.temperature}°C
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <FaTint className="icon me-2" /> 
+                          <strong>Humidity:</strong> {latestData.humidity}% 
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <FaSeedling className="icon me-2" /> 
+                          <strong>Soil Moisture:</strong> {latestData.moisture}%
+                        </ListGroup.Item>
+                      </ListGroup>
+                    ) : (
+                      <p>No real-time data available</p>
+                    )}
                   </Card.Body>
                 </Card>
               </Col>
             ))}
           </Row>
 
-          {/* Recommended Sensors Section */}
+          {/* Other sections, like Recommended Sensors, Growing Tips, and Resources */}
           <h2 id="sensors" className="section-header mb-4">Recommended Sensors</h2>
-          <p>
-            Based on the crop requirements, we recommend the following sensors:
-          </p>
           <ul>
             <li><strong>Temperature Sensor:</strong> Helps maintain the optimal temperature for crop growth.</li>
             <li><strong>Humidity Sensor:</strong> Monitors air moisture to keep humidity within ideal levels.</li>
@@ -129,7 +210,7 @@ function InfoHub() {
           <ul>
             <li>Ensure consistent watering schedules based on soil moisture levels.</li>
             <li>Monitor temperature changes and adjust irrigation or shading as needed.</li>
-            <li>Choose sensors that match your crop&apos;s environmental requirements.</li>
+            <li>Choose sensors that match your crops environmental requirements.</li>
           </ul>
 
           {/* Resources */}
@@ -143,48 +224,32 @@ function InfoHub() {
       </Row>
 
       <style jsx>{`
-        .info-hub {
-          padding: 0;
+        .info-hub { padding: 0; }
+        .sidebar { background-color: #f8f9fa; height: 100%; border-right: 1px solid #ddd; }
+        .main-header { background-color: #f5f9ff; border-radius: 8px; }
+        .section-header { color: #007bff; font-weight: bold; text-transform: uppercase; }
+        .crop-card { overflow: hidden; }
+        .card-img-container { width: 100%; overflow: hidden; height: 200px; }
+        .crop-card:hover { transform: translateY(-5px); transition: transform 0.3s ease; }
+        .icon { color: #007bff; }
+        ul { list-style-type: disc; padding-left: 20px; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+
+        .sidebar-link.list-group-item.active {
+          background-color: #007bff !important;  /* Blue background when active */
+          color: white !important;               /* White text when active */
         }
-        .sidebar {
-          background-color: #f8f9fa;
-          height: 100%;
-          border-right: 1px solid #ddd;
+
+        .sidebar-link:hover {
+          color: #007bff !important;             /* Blue text on hover */
         }
-        .main-header {
-          background-color: #f5f9ff;
-          border-radius: 8px;
-        }
-        .section-header {
-          color: #007bff;
-          font-weight: bold;
-          text-transform: uppercase;
-        }
-        .crop-card {
-          overflow: hidden;
-        }
-        .card-img-container {
-          width: 100%;
-          overflow: hidden;
-          height: 200px;
-        }
-        .crop-card:hover {
-          transform: translateY(-5px);
-          transition: transform 0.3s ease;
-        }
-        .icon {
-          color: #007bff;
-        }
-        ul {
-          list-style-type: disc;
-          padding-left: 20px;
-        }
-        a {
-          color: #007bff;
-          text-decoration: none;
-        }
-        a:hover {
-          text-decoration: underline;
+
+        .sidebar-link {
+          background-color: transparent;        /* No background by default */
+          color: #007bff !important;             /* Blue text by default */
+          transition: color 0.3s ease;
         }
       `}</style>
     </Container>

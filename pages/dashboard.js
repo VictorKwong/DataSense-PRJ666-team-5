@@ -146,7 +146,7 @@ export default function Dashboard() {
                 </Link>
               </li>
               <li className={styles.quickViewItem}>
-                <Link href="/interactive-data-hub">
+                <Link href="/interactivedatahub">
                   Interactive Data Hub
                 </Link>
               </li>

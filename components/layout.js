@@ -1,81 +1,138 @@
 // Layout.js
 import Footer from "./footer";
-import Sidebar from "./sidebar";
-import Header from "./header";
+import Navbar from "./navbar";
 import { createContext, useEffect, useState } from "react";
 import { getSensorHistoryData } from "@/pages/api/sensor";
-import config from "@/pages/api/config.json";
 import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/store";
 import { readToken } from "@/lib/authenticate";
-import Navbar from "./navbar";
 
-// Create Contexts for Realtime Data and Theme
+// Contexts for Realtime Data, Theme, and Notifications
 export const RealtimeDataContext = createContext(null);
 export const ThemeContext = createContext(null);
+export const NotificationsContext = createContext([]);
 
 const Layout = ({ children }) => {
-  const [latestData, setLatestData] = useState(null); // New state for latest data
-  const [theme, setTheme] = useState("light");
+  const [latestData, setLatestData] = useState(null);
+  const [notifications, setNotifications] = useState([]);
   const router = useRouter();
   const [user, setUser] = useAtom(userAtom);
 
+  // Load token and check authentication status
   useEffect(() => {
-    let userFromToken = readToken();
+    const userFromToken = readToken();
     if (userFromToken) {
       setUser(userFromToken);
-    }
-
-    if (!userFromToken) {
-      if (!["/login", "/register", "/","/about","/contact","/privacy"].includes(window.location.pathname)) {
-        router.replace("/login");
-      }
+    } else if (!["/",
+      "/login",
+      "/register",
+      "/about",
+      "/contact",
+      "/privacy",
+      "/terms"].includes(router.pathname)) {
+      router.replace("/login");
     }
   }, [router]);
 
-  // Fetch latest data function (from InteractiveDataHub)
+  // Fetch the latest data and check thresholds
   const fetchLatestData = async () => {
     try {
       const data = await getSensorHistoryData();
       if (Array.isArray(data) && data.length > 0) {
         const latest = data[data.length - 1];
-        setLatestData({
-          temperature: latest.temperature,
-          humidity: latest.humidity,
-          moisture: latest.moisture,
-          timestamp: latest.timestamp,
-        });
+        setLatestData(latest);
+        checkThresholds(latest); // Check thresholds with the latest data
       }
     } catch (error) {
-      console.error("Error fetching latest sensor data:", error);
+      console.error("Error fetching sensor data:", error);
     }
+  };
+
+  // Function to check thresholds and add notifications
+  const checkThresholds = (data) => {
+    // Retrieve thresholds and conditions from localStorage
+    const tempThreshold = localStorage.getItem("temperatureThreshold");
+    const tempCondition = localStorage.getItem("temperatureCondition") || "exceeds";
+    
+    const humidityThreshold = localStorage.getItem("humidityThreshold");
+    const humidityCondition = localStorage.getItem("humidityCondition") || "below";
+    
+    const moistureThreshold = localStorage.getItem("moistureThreshold");
+    const moistureCondition = localStorage.getItem("moistureCondition") || "below";
+
+    const newNotifications = [];
+
+    // Temperature Alert
+    if (tempThreshold && (
+        (tempCondition === "exceeds" && data.temperature > tempThreshold) ||
+        (tempCondition === "below" && data.temperature < tempThreshold)
+    )) {
+        newNotifications.push({
+            message: `Temperature ${tempCondition} ${tempThreshold}°C`,
+            type: "temperature",
+            condition: tempCondition,
+            timestamp: new Date().toLocaleString(),
+        });
+    }
+
+    // Humidity Alert
+    if (humidityThreshold && (
+        (humidityCondition === "exceeds" && data.humidity > humidityThreshold) ||
+        (humidityCondition === "below" && data.humidity < humidityThreshold)
+    )) {
+        newNotifications.push({
+            message: `Humidity ${humidityCondition} ${humidityThreshold}%`,
+            type: "humidity",
+            condition: humidityCondition,
+            timestamp: new Date().toLocaleString(),
+        });
+    }
+
+    // Moisture Alert
+    if (moistureThreshold && (
+        (moistureCondition === "exceeds" && data.moisture > moistureThreshold) ||
+        (moistureCondition === "below" && data.moisture < moistureThreshold)
+    )) {
+        newNotifications.push({
+            message: `Moisture ${moistureCondition} ${moistureThreshold}%`,
+            type: "moisture",
+            condition: moistureCondition,
+            timestamp: new Date().toLocaleString(),
+        });
+    }
+
+    // Update notifications context and localStorage
+    if (newNotifications.length > 0) {
+        setNotifications((prev) => [...prev, ...newNotifications]);
+        localStorage.setItem("notificationHistory", JSON.stringify([...notifications, ...newNotifications]));
+    }
+  };
+
+  // Function to clear all notifications
+  const clearNotifications = () => {
+    setNotifications([]);
+    localStorage.removeItem("notificationHistory");
   };
 
   // Auto-fetch latest data every 5 seconds
   useEffect(() => {
-    fetchLatestData(); // Fetch on mount
-    const interval = setInterval(fetchLatestData, 5000); // Refresh every 5 seconds
+    fetchLatestData();
+    const interval = setInterval(fetchLatestData, 5000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <ThemeContext.Provider value={theme}>
-      <RealtimeDataContext.Provider value={latestData}>
-        <div className="layout">
-          <Navbar />
-          <div className="content-area d-flex">
-            <main
-              className={`${
-                user ? "main-content-with-sidebar" : "main-content-without-sidebar"
-              } flex-grow-1 `}
-            >
-              {children}
-            </main>
+    <ThemeContext.Provider value={"light"}>
+      <NotificationsContext.Provider value={{ notifications, clearNotifications }}>
+        <RealtimeDataContext.Provider value={latestData}>
+          <div className="layout">
+            <Navbar notifications={notifications} clearNotifications={clearNotifications} />
+            <main>{children}</main>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      </RealtimeDataContext.Provider>
+        </RealtimeDataContext.Provider>
+      </NotificationsContext.Provider>
     </ThemeContext.Provider>
   );
 };

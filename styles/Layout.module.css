@@ -1,0 +1,51 @@
+/* styles/Layout.module.css */
+
+.notificationBell {
+    position: relative;
+    cursor: pointer;
+    font-size: 1.5em;
+    color: #007bff;
+    margin-right: 20px;
+    display: inline-block;
+  }
+  
+  .notificationBadge {
+    position: absolute;
+    top: 0;
+    right: -10px;
+    background-color: #ff0000;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.75em;
+  }
+  
+  .notificationDropdown {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    width: 250px;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 1000;
+  }
+  
+  .notificationDropdown h4 {
+    margin-top: 0;
+    font-size: 1.1em;
+    color: #333;
+  }
+  
+  .notificationItem {
+    padding: 8px;
+    font-size: 0.9em;
+    border-bottom: 1px solid #f1f1f1;
+  }
+  
+  .notificationItem:last-child {
+    border-bottom: none;
+  }
+  

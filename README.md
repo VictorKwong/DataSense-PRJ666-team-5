@@ -43,6 +43,12 @@ Modified Layout.js, navbar.js, dashboard.js, info-hub.js
 Add about.js contact.js, privacy.js
 Images added
 
+Date: 12-Nov-24
+Add Layout.css, Terms.css, Alert.css
+Add terms.js
+Update info-hub.js, interactivedatahub.js, dashboard.js, alert.js, layout.js, navbar.js
+
+
 ## Getting Started
 
 First, run the development server:
