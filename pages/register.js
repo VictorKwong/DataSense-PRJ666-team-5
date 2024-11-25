@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { Button } from "react-bootstrap";
-import { registerUser } from "@/lib/authenticate";
+import { registerUser, upsertUserWithGoogleIdToken } from "@/lib/authenticate";
 import { userAtom } from "../store/store";
 import { useAtom } from "jotai";
-import Link from "next/link";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
 const Register = () => {
   const [user, setUser] = useAtom(userAtom);
@@ -17,7 +17,8 @@ const Register = () => {
 
   // Password validation function
   const isValidPassword = (password) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     console.log("password: " + password);
     console.log("testing: " + passwordRegex.test(password));
     return passwordRegex.test(password);
@@ -51,15 +52,20 @@ const Register = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  async function handleGoogleSuccess(response) {
+    console.log("### success", response);
     try {
-      await signInWithPopup(auth, provider);
-      setUser({ userData: { email }});
-      router.push("/dashboard"); // Redirect to dashboard after successful login
-    } catch (error) {
-      setError(error.message);
+      const userData = await upsertUserWithGoogleIdToken(response.credential);
+      setUser(userData);
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err.message);
     }
-  };
+  }
+
+  async function handleGoogleError() {
+    console.log("### error");
+  }
 
   const handleCancel = () => {
     router.push("/"); // Redirect to homepage
@@ -109,9 +115,9 @@ const Register = () => {
           <label>
             <input className="mt-2 mb-2" type="checkbox" required /> I agree to
             the{" "}
-            <Link href="/terms" className="terms-link">
+            <a href="/terms" className="terms-link">
               terms and conditions
-            </Link>
+            </a>
           </label>
 
           <div className="register-button-container">
@@ -128,19 +134,16 @@ const Register = () => {
           </div>
         </form>
         <hr />
-        <Button
-          onClick={handleGoogleSignIn}
-          className="google-register-button"
-          type="button"
+
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
         >
-          <Image
-            src="/assets/images/search.png"
-            alt="Google-logo"
-            width={20}
-            height={20}
-          />
-          <span className="m-2">Register with Google</span>
-        </Button>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            useOneTap
+          ></GoogleLogin>
+        </GoogleOAuthProvider>
       </div>
 
       <style jsx>{`
@@ -149,14 +152,19 @@ const Register = () => {
           justify-content: center;
           align-items: center;
           min-height: 100vh;
-          background-image: url('/assets/images/background_image.webp'); /* Background image */
+          background-image: url("/assets/images/background_image.webp"); /* Background image */
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
           position: relative;
         }
         .register-card {
-          background-color: rgba(255, 255, 255, 0.9); /* Slight transparency to blend with the background */
+          background-color: rgba(
+            255,
+            255,
+            255,
+            0.9
+          ); /* Slight transparency to blend with the background */
           padding: 60px;
           max-width: 450px;
           width: 100%;

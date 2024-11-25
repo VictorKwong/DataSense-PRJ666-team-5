@@ -1,54 +1,68 @@
-import { useSession, signIn } from "next-auth/react";
 import { Form, Alert, Button } from "react-bootstrap";
-import { loginUser } from "@/lib/authenticate";
-import { useState, useEffect } from "react";
+import { loginUser, upsertUserWithGoogleIdToken } from "@/lib/authenticate";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { userAtom } from "../store/store";
-import Image from "next/image";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import Link from "next/link";
 
-export default function Login() {
-  const { data, status } = useSession();
+export default function Login(props) {
   const [user, setUser] = useAtom(userAtom);
   const [warning, setWarning] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
+  async function handleGoogleSuccess(response) {
+    console.log("### success", response);
+    try {
+      const userData = await upsertUserWithGoogleIdToken(response.credential);
+      setUser(userData);
+      router.push("/dashboard");
+    } catch (err) {
+      setWarning(err.message);
+    }
+  }
+
+  async function handleGoogleError() {
+    console.log("### error");
+  }
+
   async function handleLoginWithEmailPassword(e) {
     e.preventDefault();
-    setWarning(""); // Reset warning message
     try {
       const userData = await loginUser(email, password);
       setUser(userData);
       router.push("/dashboard");
     } catch (err) {
-      setWarning(err.message || 'An error occurred during login');
+      setWarning(err.message);
     }
   }
 
-  useEffect(() => {
-    if (status === "authenticated" && data) {
-      router.push("/dashboard");
-    }
-  }, [data, status, router]);
+  // useEffect(() => {
+  //   if (status === "authenticated" && data) {
+  //     router.push("/dashboard");
+  //   }
+  // }, [data, status, router]);
 
   return (
     <div className="login-container">
       <div className="login-card">
         <h1 className="login-title">Welcome Back!</h1>
-        <p className="login-description">Sign in to manage your devices with DataSense.</p>
+        <p className="login-description">
+          Sign in to manage your devices with DataSense.
+        </p>
         <Form onSubmit={handleLoginWithEmailPassword}>
           <Form.Group>
             <Form.Control
               placeholder="Email"
-              type="email"
+              type="text"
               id="email"
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="login-input"
-              required
             />
           </Form.Group>
           <br />
@@ -61,7 +75,6 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="login-input"
-              required
             />
           </Form.Group>
 
@@ -89,29 +102,26 @@ export default function Login() {
           </div>
         </Form>
         <hr />
-        <Button
-          onClick={() => signIn("google")}
-          className="google-login-button"
-          type="button"
-        >
-          <Image
-            src="/assets/images/search.png"
-            alt="Google-logo"
-            width={20}
-            height={20}
-          />
-          <span className="m-2">Login with Google</span>
-        </Button>
 
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+        >
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            useOneTap
+          ></GoogleLogin>
+        </GoogleOAuthProvider>
+        {/* Create Account and Forgot Password links */}
         <div className="additional-options">
           <p>
-            <a href="/forgot-password" className="link">
+            <Link href="/forgot-password" className="link">
               Forgot Password?
-            </a>
+            </Link>
             <span className="divider">|</span>
-            <a href="/signup" className="link">
+            <Link href="/signup" className="link">
               Create an Account
-            </a>
+            </Link>
           </p>
         </div>
       </div>
@@ -122,14 +132,19 @@ export default function Login() {
           justify-content: center;
           align-items: center;
           min-height: 100vh;
-          background-image: url('/assets/images/background_image.webp'); /* Background image */
+          background-image: url("/assets/images/background_image.webp"); /* Background image */
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
           position: relative;
         }
         .login-card {
-          background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
+          background-color: rgba(
+            255,
+            255,
+            255,
+            0.9
+          ); /* Slight transparency to blend with the background */
           padding: 60px;
           max-width: 450px;
           width: 100%;

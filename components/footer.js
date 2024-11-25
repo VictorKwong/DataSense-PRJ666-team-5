@@ -29,7 +29,7 @@ const Footer = () => {
 
             <ul className="list-unstyled mb-0">
               <li>
-                <Link href="/home" className="text-white">
+                <Link href="/" className="text-white">
                   Home
                 </Link>
                 

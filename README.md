@@ -47,6 +47,10 @@ Add Layout.css, Terms.css, Alert.css
 Add terms.js
 Update info-hub.js, interactivedatahub.js, dashboard.js, alert.js, layout.js, navbar.js
 
+### Date 25-Nov-24
+npm install @react-oauth/google
+add google account auth
+
 
 ## Getting Started
 
