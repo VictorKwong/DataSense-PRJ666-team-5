@@ -119,7 +119,7 @@ export default function Login(props) {
               Forgot Password?
             </Link>
             <span className="divider">|</span>
-            <Link href="/signup" className="link">
+            <Link href="/register" className="link">
               Create an Account
             </Link>
           </p>
