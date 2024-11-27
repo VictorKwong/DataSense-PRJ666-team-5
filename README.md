@@ -51,6 +51,8 @@ Update info-hub.js, interactivedatahub.js, dashboard.js, alert.js, layout.js, na
 npm install @react-oauth/google
 add google account auth
 
+### Date 27-Nov-24
+Google account template update
 
 ## Getting Started
 
