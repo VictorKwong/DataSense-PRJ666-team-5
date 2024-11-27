@@ -61,6 +61,7 @@ function Settings() {
       const { token, user } = await res.json();
       setToken(token);
       setUser(user);
+      setSuccessMessage("User Infomations updated successfully!");
       return user;
     } else {
       const { message } = await res.json();
@@ -185,7 +186,15 @@ function Settings() {
               type="tel"
               className="form-control"
               value={contact}
-              onChange={(e) => setContact(e.target.value)}
+              onChange={(e) => {
+                const input = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+                if (input.length <= 10) {
+                  const formatted = input
+                    .replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") // Format as 111-111-1111
+                    .replace(/(\d{3})(\d{3})/, "$1-$2"); // Handle partial formats
+                  setContact(formatted);
+                }
+              }}
               placeholder="Enter your contact number"
             />
             <small className="form-text text-muted">
@@ -193,6 +202,18 @@ function Settings() {
             </small>
           </div>
         </div>
+
+        {/* Error and Success Messages */}
+        {errorMessage && (
+          <div className="alert alert-danger mt-3" role="alert">
+            {errorMessage}
+          </div>
+        )}
+        {successMessage && (
+          <div className="alert alert-success mt-3" role="alert">
+            {successMessage}
+          </div>
+        )}
         {/* Save Changes Button */}
         <button type="submit" className="btn btn-primary mt-4 w-100">
           Save Changes
