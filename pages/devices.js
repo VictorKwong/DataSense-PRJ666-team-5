@@ -19,6 +19,7 @@ export default function Devices() {
     if (realtimeData) {
       setSensorData((prevData) => ({
         ...prevData,
+        timestamp: realtimeData.timestamp || prevData.timestamp,
         temperature: realtimeData.temperature || prevData.temperature,
         humidity: realtimeData.humidity || prevData.humidity,
         moisture: realtimeData.moisture || prevData.moisture,
@@ -59,7 +60,7 @@ export default function Devices() {
               </Card.Text>
               <Card.Text>
                 <strong>Last Updated:</strong>{" "}
-                {sensorData.temperature ? new Date().toLocaleString() : "N/A"}
+                {sensorData.isConnected ? new Date().toLocaleString() : sensorData.timestamp}
               </Card.Text>
             </Card.Body>
           </Card>
@@ -80,7 +81,7 @@ export default function Devices() {
               </Card.Text>
               <Card.Text>
                 <strong>Last Updated:</strong>{" "}
-                {sensorData.humidity ? new Date().toLocaleString() : "N/A"}
+                {sensorData.isConnected ? new Date().toLocaleString() : sensorData.timestamp}
               </Card.Text>
             </Card.Body>
           </Card>
@@ -101,7 +102,7 @@ export default function Devices() {
               </Card.Text>
               <Card.Text>
                 <strong>Last Updated:</strong>{" "}
-                {sensorData.moisture ? new Date().toLocaleString() : "N/A"}
+                {sensorData.isConnected ? new Date().toLocaleString() : sensorData.timestamp}
               </Card.Text>
             </Card.Body>
           </Card>
