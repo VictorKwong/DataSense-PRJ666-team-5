@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css"; // Date picker CSS
 import { FaDownload, FaFilter, FaSyncAlt, FaTimes } from 'react-icons/fa'; // Icons for buttons
 import { toast, ToastContainer } from 'react-toastify'; // For notifications
 import 'react-toastify/dist/ReactToastify.css';  // Toast notifications CSS
+import { userAtom } from "@/store/store";
 
 // Styles for various sections
 const headerStyle = {
