@@ -50,7 +50,7 @@ export default function Devices() {
                 <FaThermometerHalf />
               </div>
               <Card.Title className="d-flex justify-content-between align-items-center">
-                Temperature Sensor {getStatusBadge(sensorData.temperature)}
+                Temperature Sensor {getStatusBadge(sensorData.isConnected)}
               </Card.Title>
               <Card.Text className="sensor-data">
                 <strong>Data:</strong> {formatData(sensorData.temperature)} °C
@@ -71,7 +71,7 @@ export default function Devices() {
                 <FaTint />
               </div>
               <Card.Title className="d-flex justify-content-between align-items-center">
-                Humidity Sensor {getStatusBadge(sensorData.humidity)}
+                Humidity Sensor {getStatusBadge(sensorData.isConnected)}
               </Card.Title>
               <Card.Text className="sensor-data">
                 <strong>Data:</strong> {formatData(sensorData.humidity)} %
@@ -92,7 +92,7 @@ export default function Devices() {
                 <FaSeedling />
               </div>
               <Card.Title className="d-flex justify-content-between align-items-center">
-                Soil Moisture Sensor {getStatusBadge(sensorData.moisture)}
+                Soil Moisture Sensor {getStatusBadge(sensorData.isConnected)}
               </Card.Title>
               <Card.Text className="sensor-data">
                 <strong>Data:</strong> {formatData(sensorData.moisture)} %
