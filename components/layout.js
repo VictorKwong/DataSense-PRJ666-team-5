@@ -48,32 +48,34 @@ const Layout = ({ children }) => {
   //     console.error("Error fetching sensor data:", error);
   //   }
   // };
-    useEffect(() => {
-      // Fetch latest data and set it in state
-      const fetchLatestData = async () => {
-        try {
-          const data = await getSensorHistoryData(user.email);
-          if (Array.isArray(data) && data.length > 0) {
-            const latest = data[0];
-            setLatestData(latest);
-            checkThresholds(latest); // Check thresholds with the latest data
-            localStorage.setItem("latestData", JSON.stringify(latest)); // Save to localStorage
-          }
-        } catch (error) {
-          console.error("Error fetching sensor data:", error);
-        }
-      };
-    
-      // Load the data from localStorage first, then fetch latest data
-      const savedData = localStorage.getItem("latestData");
-      if (savedData) {
-        setLatestData(JSON.parse(savedData)); // Hydrate from localStorage
+  const fetchLatestData = async () => {
+    try {
+      const data = await getSensorHistoryData(user.email);
+      if (Array.isArray(data) && data.length > 0) {
+        const latest = data[0];
+        setLatestData(latest);
+        checkThresholds(latest); // Check thresholds with the latest data
+        localStorage.setItem("latestData", JSON.stringify(latest)); // Save to localStorage
       }
-      fetchLatestData();
-    
-      const interval = setInterval(fetchLatestData, 5000);
-      return () => clearInterval(interval);
-    }, []);
+    } catch (error) {
+      console.error("Error fetching sensor data:", error);
+    }
+  };
+  
+  // useEffect for loading and setting data
+  useEffect(() => {
+    // Load the data from localStorage first
+    const savedData = localStorage.getItem("latestData");
+    if (savedData) {
+      setLatestData(JSON.parse(savedData)); // Hydrate from localStorage
+    }
+  
+    // Fetch the latest data and set up polling
+    fetchLatestData();
+  
+    const interval = setInterval(fetchLatestData, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Function to check thresholds and add notifications
   const checkThresholds = (data) => {
@@ -141,12 +143,12 @@ const Layout = ({ children }) => {
     localStorage.removeItem("notificationHistory");
   };
 
-  // Auto-fetch latest data every 5 seconds
-  useEffect(() => {
-    fetchLatestData();
-    const interval = setInterval(fetchLatestData, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  // // Auto-fetch latest data every 5 seconds
+  // useEffect(() => {
+  //   fetchLatestData();
+  //   const interval = setInterval(fetchLatestData, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <ThemeContext.Provider value={"light"}>
