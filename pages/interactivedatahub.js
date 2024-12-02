@@ -9,6 +9,7 @@ import { getSensorHistoryData } from "./api/sensor";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { userAtom } from "@/store/store";
+import { useAtom } from "jotai";
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, RadialLinearScale, Title, Tooltip, Legend);
 

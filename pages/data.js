@@ -8,6 +8,7 @@ import { FaDownload, FaFilter, FaSyncAlt, FaTimes } from 'react-icons/fa'; // Ic
 import { toast, ToastContainer } from 'react-toastify'; // For notifications
 import 'react-toastify/dist/ReactToastify.css';  // Toast notifications CSS
 import { userAtom } from "@/store/store";
+import { useAtom } from "jotai";
 
 // Styles for various sections
 const headerStyle = {
