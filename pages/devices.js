@@ -60,7 +60,7 @@ export default function Devices() {
               </Card.Text>
               <Card.Text>
                 <strong>Last Updated:</strong>{" "}
-                {sensorData.isConnected.toLocaleString() ? new Date().toLocaleString() : new Date(sensorData.timestamp).toLocaleString()}
+                {sensorData.isConnected ? new Date().toLocaleString() : new Date(sensorData.timestamp).toLocaleString()}
               </Card.Text>
             </Card.Body>
           </Card>
@@ -96,7 +96,7 @@ export default function Devices() {
               </div>
               <Card.Title className="d-flex justify-content-between align-items-center">
                 Soil Moisture Sensor {getStatusBadge(sensorData.isConnected)}
-              </Card.Title>
+              </Card.Title>a
               <Card.Text className="sensor-data">
                 <strong>Data:</strong> {formatData(sensorData.moisture)} %
               </Card.Text>
