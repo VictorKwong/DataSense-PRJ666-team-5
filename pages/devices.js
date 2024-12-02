@@ -60,7 +60,7 @@ export default function Devices() {
               </Card.Text>
               <Card.Text>
                 <strong>Last Updated:</strong>{" "}
-                {sensorData.isConnected ? new Date().toLocaleString() : sensorData.timestamp}
+                {sensorData.isConnected.toLocaleString() ? new Date().toLocaleString() : new Date(sensorData.timestamp).toLocaleString()}
               </Card.Text>
             </Card.Body>
           </Card>
@@ -81,7 +81,7 @@ export default function Devices() {
               </Card.Text>
               <Card.Text>
                 <strong>Last Updated:</strong>{" "}
-                {sensorData.isConnected ? new Date().toLocaleString() : sensorData.timestamp}
+                {sensorData.isConnected ? new Date().toLocaleString() : new Date(sensorData.timestamp).toLocaleString()}
               </Card.Text>
             </Card.Body>
           </Card>
@@ -102,7 +102,7 @@ export default function Devices() {
               </Card.Text>
               <Card.Text>
                 <strong>Last Updated:</strong>{" "}
-                {sensorData.isConnected ? new Date().toLocaleString() : sensorData.timestamp}
+                {sensorData.isConnected ? new Date().toLocaleString() : new Date(sensorData.timestamp).toLocaleString()}
               </Card.Text>
             </Card.Body>
           </Card>
