@@ -37,7 +37,7 @@ export default function Devices() {
   };
 
   const formatData = (data) => {
-    return data !== null && data !== undefined ? data : "No Data";
+    return data ?? "No Data";
   };
 
   return (
