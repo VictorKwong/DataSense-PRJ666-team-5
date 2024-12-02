@@ -8,8 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getSensorHistoryData } from "./api/sensor";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { userAtom } from "@/store/store";
-import { useAtom } from "jotai";
+import { readToken } from "@/lib/authenticate";
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, RadialLinearScale, Title, Tooltip, Legend);
 
@@ -25,7 +24,6 @@ export default function InteractiveDataHub() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [isAutoRefreshOn, setIsAutoRefreshOn] = useState(false);
   const [refreshInterval, setRefreshInterval] = useState(5000);
-  const [user, setUser] = useAtom(userAtom); //user.email
 
   const chartRef = useRef(null);
 
@@ -41,7 +39,8 @@ export default function InteractiveDataHub() {
 
   const fetchLatestData = async () => {
     try {
-      const data = await getSensorHistoryData(user.email);
+      const userFromToken = readToken();
+      const data = await getSensorHistoryData(userFromToken.email);
       if (Array.isArray(data)) {
         setSensorData(data);
         setFilteredData(data.slice(-5));

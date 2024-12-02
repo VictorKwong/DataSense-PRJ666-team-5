@@ -7,8 +7,7 @@ import "react-datepicker/dist/react-datepicker.css"; // Date picker CSS
 import { FaDownload, FaFilter, FaSyncAlt, FaTimes } from 'react-icons/fa'; // Icons for buttons
 import { toast, ToastContainer } from 'react-toastify'; // For notifications
 import 'react-toastify/dist/ReactToastify.css';  // Toast notifications CSS
-import { userAtom } from "@/store/store";
-import { useAtom } from "jotai";
+import { readToken } from "@/lib/authenticate";
 
 // Styles for various sections
 const headerStyle = {
@@ -108,7 +107,6 @@ export default function Data() {
   const [moistureRange, setMoistureRange] = useState([0, 100]); // Moisture range
   const [isLoading, setIsLoading] = useState(false); // Loader state
   const [noDataMessage, setNoDataMessage] = useState(false); // To show "No data receiving" message
-  const [user, setUser] = useAtom(userAtom); //user.email
 
   const realtimeData = useContext(RealtimeDataContext);
 
@@ -117,7 +115,8 @@ export default function Data() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const data = await getSensorHistoryData(user.email);
+        const userFromToken = readToken();
+        const data = await getSensorHistoryData(userFromToken.email);
 
         if (data.error) {
           setErrorMessage(data.message); // Set the error message if there's a backend issue

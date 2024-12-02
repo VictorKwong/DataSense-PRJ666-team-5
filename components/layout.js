@@ -38,7 +38,7 @@ const Layout = ({ children }) => {
   // Fetch the latest data and check thresholds
   const fetchLatestData = async () => {
     try {
-      const data = await getSensorHistoryData(user.email);
+      const data = await getSensorHistoryData(userFromToken.email);
       if (Array.isArray(data) && data.length > 0) {
         const latest = data[0];
         setLatestData(latest);
@@ -120,12 +120,12 @@ const Layout = ({ children }) => {
     localStorage.removeItem("notificationHistory");
   };
 
-  // // Auto-fetch latest data every 5 seconds
-  // useEffect(() => {
-  //   fetchLatestData();
-  //   const interval = setInterval(fetchLatestData, 5000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  // Auto-fetch latest data every 5 seconds
+  useEffect(() => {
+    fetchLatestData();
+    const interval = setInterval(fetchLatestData, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <ThemeContext.Provider value={"light"}>
