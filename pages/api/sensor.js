@@ -1,4 +1,5 @@
 import config from "./config.json";
+import { connectToDatabase } from "@/lib/mongodb";
 
 export default function handler(req, res) {
   res.status(200).json({ name: "John Doe" });
@@ -47,4 +48,13 @@ export async function getSensorHistoryData(user_email) {
       message: "No sensor connected",
     };
   }
+}
+
+export async function getLatestSensorData(email) {
+  const { db } = await connectToDatabase();
+  return await db.collection("users")
+    .findOne(
+      { email: email },
+      { sort: { timestamp: -1 } } // Sort by descending timestamp
+    );
 }

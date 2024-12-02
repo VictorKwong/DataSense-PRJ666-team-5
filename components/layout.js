@@ -36,16 +36,31 @@ const Layout = ({ children }) => {
   }, [router]);
 
   // Fetch the latest data and check thresholds
+  // const fetchLatestData = async () => {
+  //   try {
+  //     const data = await getSensorHistoryData(user.email);
+  //     if (Array.isArray(data) && data.length > 0) {
+  //       const latest = data[data.length - 1];
+  //       setLatestData(latest);
+  //       checkThresholds(latest); // Check thresholds with the latest data
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching sensor data:", error);
+  //   }
+  // };
   const fetchLatestData = async () => {
     try {
-      const data = await getSensorHistoryData(user.email);
-      if (Array.isArray(data) && data.length > 0) {
-        const latest = data[data.length - 1];
-        setLatestData(latest);
-        checkThresholds(latest); // Check thresholds with the latest data
+      const response = await fetch(`/api/sensor/latest?email=${user.email}`);
+      let latest = await response.json();
+      latest = data[data.length - 1];
+      if (response.ok && latest) {
+        setLatestData(latest); // Update the state with the latest data
+        checkThresholds(latest); // Check thresholds
+      } else {
+        console.error("Failed to fetch the latest sensor data:", latest.message || "Unknown error");
       }
     } catch (error) {
-      console.error("Error fetching sensor data:", error);
+      console.error("Error fetching the latest sensor data:", error);
     }
   };
 
