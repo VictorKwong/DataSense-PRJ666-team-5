@@ -317,7 +317,7 @@ export default function Data() {
               </tr>
             </thead>
             <tbody>
-            {filteredData?.slice(-15)?.map((row, index) => (
+            {filteredData?.slice(-20)?.map((row, index) => (
               <tr key={index} className="new-data-row" style={index % 2 === 0 ? tableRowEvenStyle : tableRowOddStyle}>
                 <td>{new Date(row.timestamp).toLocaleString('en-GB', { 
                     timeZone: 'UTC', 
