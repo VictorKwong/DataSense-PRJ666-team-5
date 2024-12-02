@@ -9,9 +9,9 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function Devices() {
   const realtimeData = useContext(RealtimeDataContext); // Get real-time data from context
   const [sensorData, setSensorData] = useState({
-    temperature: null,
-    humidity: null,
-    moisture: null,
+    temperature: 0,
+    humidity: 0,
+    moisture: 0,
     isConnected: false,
   });
 
