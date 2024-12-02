@@ -96,7 +96,7 @@ export default function Devices() {
               </div>
               <Card.Title className="d-flex justify-content-between align-items-center">
                 Soil Moisture Sensor {getStatusBadge(sensorData.isConnected)}
-              </Card.Title>a
+              </Card.Title>
               <Card.Text className="sensor-data">
                 <strong>Data:</strong> {formatData(sensorData.moisture)} %
               </Card.Text>
