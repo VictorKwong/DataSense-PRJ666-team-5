@@ -65,7 +65,7 @@ const Layout = ({ children }) => {
     newNotifications.push({
         message: `Email: ${user.email}, T: ${data.temperature} | M: ${data.moisture} | H: ${data.humidity}`,
         type: "temperature",
-        condition: tempCondition,
+        condition: true,
         timestamp: new Date().toLocaleString(),
     });
     // Temperature Alert
