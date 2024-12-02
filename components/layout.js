@@ -36,18 +36,44 @@ const Layout = ({ children }) => {
   }, [router]);
 
   // Fetch the latest data and check thresholds
-  const fetchLatestData = async () => {
-    try {
-      const data = await getSensorHistoryData(user.email);
-      if (Array.isArray(data) && data.length > 0) {
-        const latest = data[0];
-        setLatestData(latest);
-        checkThresholds(latest); // Check thresholds with the latest data
+  // const fetchLatestData = async () => {
+  //   try {
+  //     const data = await getSensorHistoryData(user.email);
+  //     if (Array.isArray(data) && data.length > 0) {
+  //       const latest = data[0];
+  //       setLatestData(latest);
+  //       checkThresholds(latest); // Check thresholds with the latest data
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching sensor data:", error);
+  //   }
+  // };
+    useEffect(() => {
+      // Fetch latest data and set it in state
+      const fetchLatestData = async () => {
+        try {
+          const data = await getSensorHistoryData(user.email);
+          if (Array.isArray(data) && data.length > 0) {
+            const latest = data[0];
+            setLatestData(latest);
+            checkThresholds(latest); // Check thresholds with the latest data
+            localStorage.setItem("latestData", JSON.stringify(latest)); // Save to localStorage
+          }
+        } catch (error) {
+          console.error("Error fetching sensor data:", error);
+        }
+      };
+    
+      // Load the data from localStorage first, then fetch latest data
+      const savedData = localStorage.getItem("latestData");
+      if (savedData) {
+        setLatestData(JSON.parse(savedData)); // Hydrate from localStorage
       }
-    } catch (error) {
-      console.error("Error fetching sensor data:", error);
-    }
-  };
+      fetchLatestData();
+    
+      const interval = setInterval(fetchLatestData, 5000);
+      return () => clearInterval(interval);
+    }, []);
 
   // Function to check thresholds and add notifications
   const checkThresholds = (data) => {
