@@ -57,6 +57,11 @@ Google account template update
 ### Date 01-Dec-24
 Update getSensorHistoryData | data.js | interactivedatahub.js | layout.js, + useAtom(userAtom) get user.email
 
+### Date 02-Dec-24
+Update getSensorHistoryData | data.js | interactivedatahub.js | layout.js, + const userFromToken = readToken(); const data = await getSensorHistoryData(userFromToken.email); get user.email
+Update device date
+Update history database (5 var, timestamp, temperature, moisture, humidity, isConnected)
+
 ## Getting Started
 
 First, run the development server:
