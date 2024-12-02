@@ -37,7 +37,7 @@ export default function Devices() {
   };
 
   const formatData = (data) => {
-    return data !== null || data === 0 ? data : "No Data";
+    return data !== null || data == 0 ? data : "No Data";
   };
 
   return (
@@ -66,7 +66,7 @@ export default function Devices() {
           </Card>
         </Col>
 
-        {/* Humidity Sensor Card */}
+        {/* Humidity Sensor Card */}   
         <Col md={4} className="mb-4">
           <Card className="sensor-card h-100 shadow-sm">
             <Card.Body>
