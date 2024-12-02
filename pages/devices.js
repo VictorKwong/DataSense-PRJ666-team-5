@@ -12,6 +12,7 @@ export default function Devices() {
     temperature: null,
     humidity: null,
     moisture: null,
+    isConnected: false,
   });
 
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function Devices() {
         temperature: realtimeData.temperature || prevData.temperature,
         humidity: realtimeData.humidity || prevData.humidity,
         moisture: realtimeData.moisture || prevData.moisture,
+        isConnected: realtimeData.isConnected || prevData.isConnected,
       }));
     }
   }, [realtimeData]);
