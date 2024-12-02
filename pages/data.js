@@ -122,8 +122,8 @@ export default function Data() {
         if (data.error) {
           setErrorMessage(data.message); // Set the error message if there's a backend issue
         } else {
-          setLocalData(data.history);
-          setFilteredData(data.history);
+          setLocalData(data);
+          setFilteredData(data);
           setErrorMessage(null); // Clear any previous error message
 
         }

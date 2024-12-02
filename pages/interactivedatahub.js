@@ -43,10 +43,10 @@ export default function InteractiveDataHub() {
     try {
       const data = await getSensorHistoryData(user.email);
       if (Array.isArray(data)) {
-        setSensorData(data.history);
-        setFilteredData(data.history.slice(-5));
-        if (data.history.length > 0) {
-          const latest = data.history[0];
+        setSensorData(data);
+        setFilteredData(data.slice(-5));
+        if (data.length > 0) {
+          const latest = data[0];
           setLatestData({
             temperature: latest.temperature,
             humidity: latest.humidity,
