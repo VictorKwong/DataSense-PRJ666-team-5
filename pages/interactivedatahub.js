@@ -23,6 +23,7 @@ export default function InteractiveDataHub() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [isAutoRefreshOn, setIsAutoRefreshOn] = useState(false);
   const [refreshInterval, setRefreshInterval] = useState(5000);
+  const [user, setUser] = useAtom(userAtom); //user.email
 
   const chartRef = useRef(null);
 
@@ -38,7 +39,7 @@ export default function InteractiveDataHub() {
 
   const fetchLatestData = async () => {
     try {
-      const data = await getSensorHistoryData();
+      const data = await getSensorHistoryData(user.email);
       if (Array.isArray(data)) {
         setSensorData(data);
         setFilteredData(data.slice(-5));

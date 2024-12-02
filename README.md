@@ -54,6 +54,9 @@ add google account auth
 ### Date 27-Nov-24
 Google account template update
 
+### Date 01-Dec-24
+Update getSensorHistoryData | data.js | interactivedatahub.js | layout.js, + useAtom(userAtom) get user.email
+
 ## Getting Started
 
 First, run the development server:

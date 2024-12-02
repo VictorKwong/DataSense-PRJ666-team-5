@@ -106,6 +106,7 @@ export default function Data() {
   const [moistureRange, setMoistureRange] = useState([0, 100]); // Moisture range
   const [isLoading, setIsLoading] = useState(false); // Loader state
   const [noDataMessage, setNoDataMessage] = useState(false); // To show "No data receiving" message
+  const [user, setUser] = useAtom(userAtom); //user.email
 
   const realtimeData = useContext(RealtimeDataContext);
 
@@ -114,7 +115,7 @@ export default function Data() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const data = await getSensorHistoryData();
+        const data = await getSensorHistoryData(user.email);
 
         if (data.error) {
           setErrorMessage(data.message); // Set the error message if there's a backend issue
