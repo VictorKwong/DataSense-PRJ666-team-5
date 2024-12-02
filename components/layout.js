@@ -63,12 +63,6 @@ const Layout = ({ children }) => {
     const moistureCondition = localStorage.getItem("moistureCondition") || "below";
 
     const newNotifications = [];
-    newNotifications.push({
-        message: `Email: ${user.email}, T: ${data.temperature} | M: ${data.moisture} | H: ${data.humidity}`,
-        type: "temperature",
-        condition: true,
-        timestamp: new Date().toLocaleString(),
-    });
     // Temperature Alert
     if (tempThreshold && (
         (tempCondition === "exceeds" && data.temperature > tempThreshold) ||
