@@ -39,10 +39,8 @@ const Layout = ({ children }) => {
   const fetchLatestData = async () => {
     try {
       const data = await getSensorHistoryData(user.email);
-      if (Array.isArray(data) && data.length > 0) {
-        const latest = data[0];
-        console.log(latest)
-        console.log("====")
+      if (Array.isArray(data.history) && data.history.length > 0) {
+        const latest = data.history[0];
         setLatestData(latest);
         checkThresholds(latest); // Check thresholds with the latest data
       }

@@ -122,9 +122,10 @@ export default function Data() {
         if (data.error) {
           setErrorMessage(data.message); // Set the error message if there's a backend issue
         } else {
-          setLocalData(data);
-          setFilteredData(data);
+          setLocalData(data.history);
+          setFilteredData(data.history);
           setErrorMessage(null); // Clear any previous error message
+
         }
       } catch (error) {
         setErrorMessage("No sensor connected"); // Fallback error message if something goes wrong
