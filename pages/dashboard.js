@@ -82,27 +82,27 @@ export default function Dashboard() {
             icon={<i className="fa-solid fa-link"></i>}
           >
             <ul>
+              <Link href="/contact">
               <li className={styles.favoriteItem}>
                 <h3>
-                  <Link href="/contact">
                     Contact
-                  </Link>
                 </h3>
               </li>
+              </Link>
+              <Link href="/about">
               <li className={styles.favoriteItem}>
                 <h3>
-                  <Link href="/about">
                     About
-                  </Link>
                 </h3>
               </li>
+              </Link>
+              <Link href="/info-hub">
               <li className={styles.favoriteItem}>
                 <h3>
-                  <Link href="/info-hub">
                     Info Hub
-                  </Link>
                 </h3>
               </li>
+              </Link>
             </ul>
           </SimpleItem>
 
@@ -140,16 +140,16 @@ export default function Dashboard() {
                   <p>Loading latest data...</p>
                 )}
               </li>
+              <Link href="/devices">
               <li className={styles.quickViewItem}>
-                <Link href="/devices">
                   Devices
-                </Link>
               </li>
+              </Link>
+              <Link href="/interactivedatahub">
               <li className={styles.quickViewItem}>
-                <Link href="/interactivedatahub">
                   Interactive Data Hub
-                </Link>
               </li>
+              </Link>
             </ul>
           </SimpleItem>
         </div>
