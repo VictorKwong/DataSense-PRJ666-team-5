@@ -36,18 +36,6 @@ const Layout = ({ children }) => {
   }, [router]);
 
   // Fetch the latest data and check thresholds
-  // const fetchLatestData = async () => {
-  //   try {
-  //     const data = await getSensorHistoryData(user.email);
-  //     if (Array.isArray(data) && data.length > 0) {
-  //       const latest = data[0];
-  //       setLatestData(latest);
-  //       checkThresholds(latest); // Check thresholds with the latest data
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching sensor data:", error);
-  //   }
-  // };
   const fetchLatestData = async () => {
     try {
       const data = await getSensorHistoryData(user.email);
@@ -55,27 +43,11 @@ const Layout = ({ children }) => {
         const latest = data[0];
         setLatestData(latest);
         checkThresholds(latest); // Check thresholds with the latest data
-        localStorage.setItem("latestData", JSON.stringify(latest)); // Save to localStorage
       }
     } catch (error) {
       console.error("Error fetching sensor data:", error);
     }
   };
-  
-  // useEffect for loading and setting data
-  useEffect(() => {
-    // Load the data from localStorage first
-    const savedData = localStorage.getItem("latestData");
-    if (savedData) {
-      setLatestData(JSON.parse(savedData)); // Hydrate from localStorage
-    }
-  
-    // Fetch the latest data and set up polling
-    fetchLatestData();
-  
-    const interval = setInterval(fetchLatestData, 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Function to check thresholds and add notifications
   const checkThresholds = (data) => {
@@ -90,7 +62,12 @@ const Layout = ({ children }) => {
     const moistureCondition = localStorage.getItem("moistureCondition") || "below";
 
     const newNotifications = [];
-
+    newNotifications.push({
+        message: `Email: ${user.email}, T: ${data.temperature} | M: ${data.moisture} | H: ${data.humidity}`,
+        type: "temperature",
+        condition: tempCondition,
+        timestamp: new Date().toLocaleString(),
+    });
     // Temperature Alert
     if (tempThreshold && (
         (tempCondition === "exceeds" && data.temperature > tempThreshold) ||
