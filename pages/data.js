@@ -319,7 +319,7 @@ export default function Data() {
             <tbody>
             {filteredData?.slice(-20)?.map((row, index) => (
               <tr key={index} className="new-data-row" style={index % 2 === 0 ? tableRowEvenStyle : tableRowOddStyle}>
-                <td>{new Date(row.timestamp).toLocaleTimeString()}</td>
+                <td>{new Date(row.timestamp).toLocaleString()}</td>
                 <td>{row.temperature} °C</td>
                 <td>{row.humidity} %</td>
                 <td>{row.moisture} %</td>
