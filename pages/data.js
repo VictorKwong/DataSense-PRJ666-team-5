@@ -310,7 +310,7 @@ export default function Data() {
           <table className="table table-hover align-middle" style={tableStyle}>
             <thead className="thead-dark">
               <tr>
-                <th>Timestamp (MM/DD/YY</th>
+                <th>Timestamp (MM/DD/YY)</th>
                 <th>Temperature</th>
                 <th>Humidity</th>
                 <th>Moisture</th>
