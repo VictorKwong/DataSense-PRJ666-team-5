@@ -68,7 +68,7 @@ Update history database (5 var, timestamp, temperature, moisture, humidity, isCo
 - Chat bot is for general uses (with/without user authentication)
 - npm install @google-cloud/dialogflow
 - npm install dialogflow
-- npm install @mui/material
+- npm install @mui/material @emotion/react @emotion/styled
 - npm install @mui/icons-material
 
 ## Getting Started
