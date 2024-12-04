@@ -310,7 +310,7 @@ export default function Data() {
           <table className="table table-hover align-middle" style={tableStyle}>
             <thead className="thead-dark">
               <tr>
-                <th>Timestamp</th>
+                <th>Timestamp (MM/DD/YY</th>
                 <th>Temperature</th>
                 <th>Humidity</th>
                 <th>Moisture</th>
@@ -319,7 +319,15 @@ export default function Data() {
             <tbody>
             {filteredData?.slice(-20)?.map((row, index) => (
               <tr key={index} className="new-data-row" style={index % 2 === 0 ? tableRowEvenStyle : tableRowOddStyle}>
-                <td>{new Date(row.timestamp).toLocaleString()}</td>
+                <td>{new Date(row.timestamp).toLocaleString('en', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: true
+                })}</td>
                 <td>{row.temperature} °C</td>
                 <td>{row.humidity} %</td>
                 <td>{row.moisture} %</td>
