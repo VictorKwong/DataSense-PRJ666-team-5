@@ -67,6 +67,7 @@ Update history database (5 var, timestamp, temperature, moisture, humidity, isCo
 - Chat bot Modified (pages/_app.js, pages/dashboard.js)
 - Chat bot is for general uses (with/without user authentication)
 - npm install @google-cloud/dialogflow
+- npm install dialogflow
 
 ## Getting Started
 
