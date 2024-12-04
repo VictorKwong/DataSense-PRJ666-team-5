@@ -42,7 +42,7 @@ export default function InteractiveDataHub() {
       const userFromToken = readToken();
       const data = await getSensorHistoryData(userFromToken.email);
       if (Array.isArray(data)) {
-        const reversedData = data.reverse();
+        const reversedData = data.slice().reverse(); //shallow copy
         setFilteredData(reversedData.slice(0, 5));
         if (data.length > 0) {
           const latest = data[0];
