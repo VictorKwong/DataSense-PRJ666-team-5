@@ -3,6 +3,7 @@ import Layout from "@/components/layout";
 import "../styles/globals.css";
 import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrap CSS
 import { useEffect } from "react"; // Import useEffect to load JS
+import ChatBotWrapper from "@/components/ChatBotWrapper"; // Import the ChatBotWrapper
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -16,6 +17,8 @@ export default function App({ Component, pageProps }) {
     <SessionProvider session={pageProps.session}>
       <Layout>
         <Component {...pageProps} />
+        {/* Add ChatBotWrapper for global chatbot functionality */}
+        <ChatBotWrapper />
       </Layout>
     </SessionProvider>
   );

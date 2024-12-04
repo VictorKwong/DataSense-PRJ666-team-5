@@ -39,9 +39,9 @@ export default function Dashboard() {
   const items = [
     {
       src: SetupGuideImage,
-      name: "Setup Guide",
-      link: "/setup-guide",
-      buttonText: "Setup Guide",
+      name: "Need Help?",
+      link: "/HelpPage",
+      buttonText: "Need Help?",
       icon: <i className="fas fa-tools"></i>,
       color: "#17a2b8",
     },
@@ -55,9 +55,9 @@ export default function Dashboard() {
     },
     {
       src: ReportsImage,
-      name: "Reports",
-      link: "/reports",
-      buttonText: "View Reports",
+      name: "data",
+      link: "/data",
+      buttonText: "Check data",
       icon: <i className="fas fa-chart-line"></i>,
       color: "#007bff",
     },

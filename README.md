@@ -62,6 +62,11 @@ Update getSensorHistoryData | data.js | interactivedatahub.js | layout.js, + con
 Update device date
 Update history database (5 var, timestamp, temperature, moisture, humidity, isConnected)
 
+### Date 04-Dec-24
+- Chat bot update (components/ChatBot.js, components/ChatBotWrapper.js, dialogflow-key.json, pages/HelpPage.js, pages/api/dialogflow.js)
+- Chat bot Modified (pages/_app.js, pages/dashboard.js)
+- Chat bot is for general uses (with/without user authentication)
+
 ## Getting Started
 
 First, run the development server:
