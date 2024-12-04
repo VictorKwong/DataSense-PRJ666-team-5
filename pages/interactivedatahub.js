@@ -42,8 +42,10 @@ export default function InteractiveDataHub() {
       const userFromToken = readToken();
       const data = await getSensorHistoryData(userFromToken.email);
       if (Array.isArray(data)) {
-        const reversedData = data.slice().reverse(); //shallow copy
-        setFilteredData(reversedData.slice(0, 5));
+        const slicedData = data.slice(0, 5); // Slice the first 5 elements
+        slicedData.reverse(); // Reverse the sliced part
+        
+        setFilteredData(slicedData); // Set the filtered reversed data
         if (data.length > 0) {
           const latest = data[0];
           setLatestData({
