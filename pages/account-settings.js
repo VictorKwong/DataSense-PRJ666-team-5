@@ -12,10 +12,11 @@ function Settings() {
   const [contact, setContact] = useState(user?.contact);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [userInfoSuccessMessage, setUserInfoSuccessMessage] = useState("");
+  const [passwordSuccessMessage, setPasswordSuccessMessage] = useState("");
+  const [userInfoErrorMessage, setUserInfoErrorMessage] = useState("");
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [password, setPassword] = useState("");
-  const [warning, setWarning] = useState("");
 
   useEffect(() => {
     setUsername(user?.username);
@@ -42,87 +43,85 @@ function Settings() {
   async function handleSaveUserInfo(e) {
     e.preventDefault();
     e.stopPropagation();
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${user?._id}/updateInfo`,
-      {
-        method: "PUT",
-        body: JSON.stringify({
-          username,
-          contact,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`, // Use token for authentication
-        },
-      }
-    );
+    setUserInfoErrorMessage("");
+    setUserInfoSuccessMessage("");
 
-    if (res.status === 200) {
-      const { token, user } = await res.json();
-      setToken(token);
-      setUser(user);
-      setSuccessMessage("User Infomations updated successfully!");
-      return user;
-    } else {
-      const { message } = await res.json();
-      throw new Error(message);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${user?._id}/updateInfo`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ username, contact }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+
+      if (res.ok) {
+        const { token, user } = await res.json();
+        setToken(token);
+        setUser(user);
+        setUserInfoSuccessMessage("User information updated successfully!");
+      } else {
+        const { message } = await res.json();
+        setUserInfoErrorMessage(message);
+      }
+    } catch (error) {
+      setUserInfoErrorMessage(
+        "Failed to update user information. Please try again."
+      );
     }
   }
 
-  const handleSavePasswords = (e) => {
+  const handleSavePasswords = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setErrorMessage("");
-    setSuccessMessage("");
+    setPasswordErrorMessage("");
+    setPasswordSuccessMessage("");
 
     if (!password) {
-      setErrorMessage("Please enter your old password.");
+      setPasswordErrorMessage("Please enter your old password.");
       return;
     }
 
     if (!isValidPassword(newPassword)) {
-      setErrorMessage(
+      setPasswordErrorMessage(
         "Password must be at least 8 characters long and contain at least one number, one uppercase letter, and one lowercase letter."
       );
       return;
     }
 
     if (newPassword && newPassword !== confirmPassword) {
-      setErrorMessage("Passwords do not match.");
+      setPasswordErrorMessage("Passwords do not match.");
       return;
     }
 
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${user?._id}/set-password`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password,
-          newPassword,
-        }),
-      }
-    )
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw response.json();
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${user?._id}/set-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ password, newPassword }),
         }
-      })
-      .then((data) => {
-        console.log("Password updated successfully:", data);
+      );
+
+      if (res.ok) {
         setPassword("");
         setNewPassword("");
         setConfirmPassword("");
-        setSuccessMessage("Password updated successfully!");
-      })
-      .catch((error) => {
-        console.error("Error updating password:", error);
-        setErrorMessage("Failed to update password. Please try again.");
-      });
+        setPasswordSuccessMessage("Password updated successfully!");
+      } else {
+        const { message } = await res.json();
+        setPasswordErrorMessage(message || "Failed to update password.");
+      }
+    } catch (error) {
+      setPasswordErrorMessage("Failed to update password. Please try again.");
+    }
   };
 
   return (
@@ -203,16 +202,12 @@ function Settings() {
           </div>
         </div>
 
-        {/* Error and Success Messages */}
-        {errorMessage && (
-          <div className="alert alert-danger mt-3" role="alert">
-            {errorMessage}
-          </div>
+        {/* User Info Messages */}
+        {userInfoErrorMessage && (
+          <div className="alert alert-danger">{userInfoErrorMessage}</div>
         )}
-        {successMessage && (
-          <div className="alert alert-success mt-3" role="alert">
-            {successMessage}
-          </div>
+        {userInfoSuccessMessage && (
+          <div className="alert alert-success">{userInfoSuccessMessage}</div>
         )}
         {/* Save Changes Button */}
         <button type="submit" className="btn btn-primary mt-4 w-100">
@@ -274,16 +269,12 @@ function Settings() {
             </div>
           </div>
 
-          {/* Error and Success Messages */}
-          {errorMessage && (
-            <div className="alert alert-danger mt-3" role="alert">
-              {errorMessage}
-            </div>
+          {/* Password Messages */}
+          {passwordErrorMessage && (
+            <div className="alert alert-danger">{passwordErrorMessage}</div>
           )}
-          {successMessage && (
-            <div className="alert alert-success mt-3" role="alert">
-              {successMessage}
-            </div>
+          {passwordSuccessMessage && (
+            <div className="alert alert-success">{passwordSuccessMessage}</div>
           )}
 
           {/* Save Changes Button */}

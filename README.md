@@ -71,6 +71,9 @@ Update history database (5 var, timestamp, temperature, moisture, humidity, isCo
 - npm install @mui/material @emotion/react @emotion/styled
 - npm install @mui/icons-material
 
+- const reversedData = data.slice().reverse(); //shallow copy [graph display]
+- update account-settings.js [refresh the account setting success message, need update regex]
+
 ## Getting Started
 
 First, run the development server:
