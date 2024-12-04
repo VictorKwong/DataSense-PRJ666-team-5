@@ -72,7 +72,7 @@ Update history database (5 var, timestamp, temperature, moisture, humidity, isCo
 - npm install @mui/icons-material
 
 - const reversedData = data.slice().reverse(); //shallow copy [graph display]
-- update account-settings.js [refresh the account setting success message, need update regex]
+- update account-settings.js [regex 10 digit phone]
 
 ## Getting Started
 

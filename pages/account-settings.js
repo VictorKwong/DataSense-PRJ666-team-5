@@ -17,6 +17,8 @@ function Settings() {
   const [userInfoErrorMessage, setUserInfoErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [password, setPassword] = useState("");
+  const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
+  const [contactErrorMessage, setContactErrorMessage] = useState("");
 
   useEffect(() => {
     setUsername(user?.username);
@@ -32,19 +34,61 @@ function Settings() {
     );
   }
 
-  const isValidPassword = (newPassword) => {
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    console.log("password: " + newPassword);
-    console.log("testing: " + passwordRegex.test(newPassword));
-    return passwordRegex.test(newPassword);
+  // Username validation regex
+  const isValidUsername = (username) => {
+    // Username should be between 3-20 characters and may only contain alphanumeric characters, underscores and hyphens
+    const regex = /^[a-zA-Z0-9_-]{3,20}$/;
+    return regex.test(username);
   };
 
-  async function handleSaveUserInfo(e) {
+  const handleUsernameChange = (e) => {
+    const newUsername = e.target.value;
+    setUsername(newUsername);
+
+    // Validate username as the user types
+    if (!isValidUsername(newUsername)) {
+      setUsernameErrorMessage(
+        "Username must be 3-20 characters long, and may only contain letters, numbers, underscores, and hyphens."
+      );
+    } else {
+      setUsernameErrorMessage("");
+    }
+  };
+
+  const handleContactChange = (e) => {
+    const input = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+    if (input.length <= 10) {
+      const formatted = input
+        .replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") // Format as 111-111-1111
+        .replace(/(\d{3})(\d{3})/, "$1-$2"); // Handle partial formats
+      setContact(formatted);
+
+      // Contact number validation: Must be exactly 10 digits
+      if (input.length !== 10) {
+        setContactErrorMessage("Contact number must be 10 digits.");
+      } else {
+        setContactErrorMessage(""); // Clear error if valid
+      }
+    }
+  };
+
+  const handleSaveUserInfo = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     setUserInfoErrorMessage("");
     setUserInfoSuccessMessage("");
+
+    // Validate username before submission
+    if (!isValidUsername(username)) {
+      setUsernameErrorMessage("Please enter a valid username.");
+      return;
+    }
+
+    // Validate contact number length (it should be 10 digits)
+    if (contact.replace(/\D/g, "").length !== 10) {
+      setUserInfoErrorMessage("Please enter a valid 10-digit contact number.");
+      return;
+    }
 
     try {
       const res = await fetch(
@@ -73,7 +117,7 @@ function Settings() {
         "Failed to update user information. Please try again."
       );
     }
-  }
+  };
 
   const handleSavePasswords = async (e) => {
     e.preventDefault();
@@ -168,10 +212,15 @@ function Settings() {
               type="text"
               className="form-control"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={handleUsernameChange}
               placeholder="Enter your username"
             />
-            <small className="form-text text-muted">Add user name.</small>
+            {usernameErrorMessage && (
+              <div className="alert alert-danger mt-2">
+                {usernameErrorMessage}
+              </div>
+            )}
+            <small className="form-text text-muted">Add a username.</small>
           </div>
         </div>
 
@@ -185,17 +234,14 @@ function Settings() {
               type="tel"
               className="form-control"
               value={contact}
-              onChange={(e) => {
-                const input = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
-                if (input.length <= 10) {
-                  const formatted = input
-                    .replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") // Format as 111-111-1111
-                    .replace(/(\d{3})(\d{3})/, "$1-$2"); // Handle partial formats
-                  setContact(formatted);
-                }
-              }}
+              onChange={handleContactChange}
               placeholder="Enter your contact number"
             />
+            {contactErrorMessage && (
+              <div className="alert alert-danger mt-2">
+                {contactErrorMessage}
+              </div>
+            )}
             <small className="form-text text-muted">
               Add a phone number for account recovery and notifications.
             </small>
