@@ -49,7 +49,13 @@ const Register = () => {
       router.push("/dashboard"); // Redirect to dashboard after successful registration
     } catch (error) {
       console.error(error);
-      setError(error.message);
+      if (String(error?.message).includes("E11000 duplicate key error")) {
+        setError(
+          "Email is already used, please sign-in, or use a different email."
+        );
+      } else {
+        setError("Something went wrong, please try again.");
+      }
     }
   };
 

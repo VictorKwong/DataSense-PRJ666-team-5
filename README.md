@@ -75,6 +75,9 @@ Update UI
 - const reversedData = data.slice().reverse(); //shallow copy [graph display]
 - update account-settings.js [regex 10 digit phone]
 
+### Date 06-Dec-24
+- update navBar.js and register.js
+
 ## Getting Started
 
 First, run the development server:

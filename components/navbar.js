@@ -218,9 +218,7 @@ const Navbar = ({ notifications, clearNotifications }) => {
 
           {user ? (
             <>
-              <span className="nav-link">
-                {user.username ? user.username : email}
-              </span>
+              <span className="nav-link">{user.username ?? user.email}</span>
               <button
                 className="btn btn-danger ms-2"
                 onClick={handleLogout}
