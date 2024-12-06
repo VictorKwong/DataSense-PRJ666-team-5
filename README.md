@@ -78,6 +78,7 @@ Update UI
 ### Date 06-Dec-24
 - update navBar.js and register.js
 - update chatBot [chatBot.js api/nlp.js]
+- npm install node-nlp
 
 ## Getting Started
 
