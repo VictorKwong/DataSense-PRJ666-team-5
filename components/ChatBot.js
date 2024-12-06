@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 
 const ChatBot = ({ onClose }) => {
   const [messages, setMessages] = useState([
-    { text: "Hi! How can I assist you today?", sender: "bot" },
+    { text: "Hi! I am the DataSense Bot. How can I assist you today?", sender: "bot" },
   ]);
   const [userInput, setUserInput] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state for "Typing..." animation
 
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
@@ -12,27 +13,30 @@ const ChatBot = ({ onClose }) => {
     // Add user's message to the chat
     const userMessage = { text: userInput, sender: "user" };
     setMessages((prev) => [...prev, userMessage]);
+    setUserInput(""); // Clear input field
+    setLoading(true); // Show "Typing..." animation
 
     try {
-      // Send the user's message to the API
-      const response = await fetch('/api/dialogflow', {
+      // Call the API to get a response
+      const response = await fetch('/api/nlp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userInput }),
       });
-      const data = await response.json();
 
-      // Add the bot's response to the chat
-      const botMessage = { text: data.reply || "I'm sorry, I didn't understand that.", sender: "bot" };
+      const data = await response.json();
+      const botMessage = { text: data.reply || "I didn't understand that. Can you rephrase?", sender: "bot" };
+
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
-      console.error("Error communicating with API:", error);
-      const errorMessage = { text: "Something went wrong. Please try again later.", sender: "bot" };
-      setMessages((prev) => [...prev, errorMessage]);
+      console.error("Error communicating with NLP API:", error);
+      setMessages((prev) => [
+        ...prev,
+        { text: "Oops! Something went wrong. Please try again later.", sender: "bot" },
+      ]);
+    } finally {
+      setLoading(false); // Remove "Typing..." animation
     }
-
-    // Clear the input field
-    setUserInput("");
   };
 
   return (
@@ -51,6 +55,7 @@ const ChatBot = ({ onClose }) => {
         zIndex: 1000,
       }}
     >
+      {/* Header */}
       <header
         style={{
           backgroundColor: '#007bff',
@@ -63,7 +68,7 @@ const ChatBot = ({ onClose }) => {
           alignItems: 'center',
         }}
       >
-        <h3 style={{ margin: 0 }}>Support Bot</h3>
+        <h3 style={{ margin: 0 }}>DataSense Bot</h3>
         <button
           onClick={onClose}
           style={{
@@ -77,6 +82,8 @@ const ChatBot = ({ onClose }) => {
           ✖
         </button>
       </header>
+
+      {/* Chat Messages */}
       <div
         style={{
           flex: 1,
@@ -109,7 +116,21 @@ const ChatBot = ({ onClose }) => {
             </div>
           </div>
         ))}
+        {loading && (
+          <div
+            style={{
+              textAlign: 'center',
+              margin: '10px 0',
+              fontStyle: 'italic',
+              color: '#888',
+            }}
+          >
+            Typing...
+          </div>
+        )}
       </div>
+
+      {/* Input Area */}
       <div
         style={{
           padding: '10px',
@@ -132,6 +153,7 @@ const ChatBot = ({ onClose }) => {
             border: '1px solid #ccc',
             marginRight: '10px',
           }}
+          disabled={loading} // Disable input while bot is typing
         />
         <button
           onClick={handleSendMessage}
@@ -143,6 +165,7 @@ const ChatBot = ({ onClose }) => {
             border: 'none',
             cursor: 'pointer',
           }}
+          disabled={loading} // Disable button while bot is typing
         >
           Send
         </button>
