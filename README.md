@@ -80,6 +80,10 @@ Update UI
 - update chatBot [chatBot.js api/nlp.js]
 - npm install node-nlp
 
+### Date 08-Dec-24
+- update register.js and account-settings.js
+- comment some console.log information
+
 ## Getting Started
 
 First, run the development server:

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaEnvelope, FaUser, FaPhoneAlt, FaLock } from "react-icons/fa";
 import { loginUser, getToken, setToken } from "@/lib/authenticate";
+import { isValidPassword } from "./register";
 
 function Settings() {
   const [user, setUser] = useAtom(userAtom);

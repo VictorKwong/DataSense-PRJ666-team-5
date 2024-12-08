@@ -8,6 +8,15 @@ import { useAtom } from "jotai";
 import Link from "next/link";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
+// Password validation function
+export const isValidPassword = (password) => {
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  // console.log("password: " + password);
+  // console.log("testing: " + passwordRegex.test(password));
+  return passwordRegex.test(password);
+};
+
 const Register = () => {
   const [user, setUser] = useAtom(userAtom);
   const [email, setEmail] = useState("");
@@ -15,15 +24,6 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-
-  // Password validation function
-  const isValidPassword = (password) => {
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    console.log("password: " + password);
-    console.log("testing: " + passwordRegex.test(password));
-    return passwordRegex.test(password);
-  };
 
   const handleRegisterWithEmailPassword = async (e) => {
     e.preventDefault();
